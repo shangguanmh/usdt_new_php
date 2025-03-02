@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/mystyle.css" />
+  <link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/layui/css/layui.css"  media="all">
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>            
+  
+<div class="my-btn-box" >
+	<form class="layui-form" action="{$action}" method="get" id="sousuoForm">
+				<input type="hidden" id="page" name="page" value="{$pageInfo['page']}" />
+				{$searchCol}				
+				{if condition="$searchshow  eq 1"}
+					<button class="layui-btn mgl-30" style="margin-left: 30px;">查询</button>
+    		{/if}
+				{if condition="$addshow  eq 1"}
+    			<a class="layui-btn btn-add btn-default" style="float: right;"  id="add">新增</a>
+    		{/if}
+	</form>
+		</div>
+		<div class="layui-form">
+			<table class="layui-table"> 
+				<thead>
+					{$showCol.head}
+				</thead>
+				<tbody>
+					{$showCol.neirong}
+				</tbody>
+			</table>
+		</div>
+	<div id="pagediv"></div>
+	<span>共{$pageInfo.count}条数据</span>
+		<div class="layui-input-inline" style="display: none;">
+		<input type="file" name="photo" class="layui-upload-file" accept="image/*" id="test2" enctype="multipart/form-data">
+	</div>
+<script src="__PUBLIC__/static/Cs/frame/layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+layui.use(['form','layer','laypage','upload'], function(){
+	var $ = layui.jquery,form = layui.form(),laypage = layui.laypage,layer = layui.layer;
+  
+  // 分页
+	laypage({
+		cont: 'pagediv',
+		curr: {$pageInfo['page']},
+		pages: {$pageInfo['page_count']}, //总页数
+		groups: 5, //连续显示分页数
+		jump: function(obj, first){
+	    	var page = obj.curr;
+	    	if (!first) {
+	    		$("#page").val(page);
+	    		$("#sousuoForm").submit();
+	    	}
+	    }
+	});
+		$('.logoset').on('click',function(){
+				dataid = $(this).attr('data_id');
+				$("#test2").click();
+			});
+			layui.upload({
+				    elem: '#test2' //绑定元素
+				    ,url: "{:url('Base/uploadPic')}" //上传接口
+				    ,success: function(res){
+				        $.ajax({
+				        	type:"post",
+				        	data:{data_id:dataid,url:res.data.url},
+				        	url:"{:url('task/updatelogo')}",
+				        	async:true,
+				        	dataType:'json',
+				        	success:function(res){
+				                if(res.code > 0){
+						            layer.msg(res.msg,{time:1800,icon: 1},function(){
+						            		$('.logoset[data_id='+dataid+']').prev().attr('src',res.data.newurl);
+						            });
+						       	 }else{
+						            layer.msg(res.msg,{time:1800,icon: 5});
+						       	 }
+				        	}
+			            });
+					}
+				    ,error: function(){
+				      //请求异常回调
+				    }
+				});
+		  $('.del').on('click',function(){
+	 	  var notice = $(this).html();
+  	 	var data_id =$(this).parent().attr('data_id');
+	 		layer.confirm('确认要'+notice+'吗？', {
+			            btn : [ '确定', '取消' ]//按钮
+			        }, function(index) {
+			            layer.close(index);
+						$.ajax({
+				        	type:"post",
+				        	data:{data_id:data_id,status:status},
+				        	url:"{:url('task/del')}",
+				        	async:true,
+				        	dataType:'json',
+				        	success:function(res){
+						        if(res.code == 1){
+						            layer.msg('操作成功');
+	  		          		  window.location.reload();
+						        }else{
+						            layer.msg(res.msg,{time:1800,icon: 5});
+						        }
+						    }
+			        	});
+		        });
+	 
+	 });
+	   $('.change').on('click',function(){
+  	 	var data_id =$(this).parent().attr('data_id');
+				layer.open({
+				type:2,
+				title:'修改',
+				shadeClose:true,
+				shade:0.8,
+				area:['50%','80%'],
+				content:"{$changeAction}?data_id="+data_id
+			});
+	
+   });
+       $('.vipset').on('click',function(){
+  	 	var data_id =$(this).attr('data_id');
+				layer.open({
+				type:2,
+				title:'修改任务绑定等级',
+				shadeClose:true,
+				shade:0.8,
+				area:['80%','90%'],
+				content:"{:url('Task/vipset')}?data_id="+data_id
+			});
+	
+   });
+     $('#add').on('click',function(){
+				layer.open({
+				type:2,
+				title:'新增',
+				shadeClose:true,
+				shade:0.8,
+				area:['50%','80%'],
+				content:"{$addAction}"
+			});
+	
+   });
+});
+</script>
+
+</body>
+</html>

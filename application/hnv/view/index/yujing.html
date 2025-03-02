@@ -1,0 +1,255 @@
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>fafahuotai</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link id="" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/layui.css" media="all">
+		<link id="" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/font-awesome.min.css" media="all">
+		<link id="" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/iconfont.css" media="all">
+		<!--<link id="layuicss-layer" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/layer/default/layer.css?v=3.1.1" media="all">-->
+		<link id="layuicss-skincodecss" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/code.css" media="all">
+			<link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/layui/css/layui1.css">
+    	<link rel="stylesheet" href="__PUBLIC__/static/Cs/css/style.css">
+  <link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/layui/css/layui.css"  media="all">
+		<style>
+			.cke {
+				visibility: hidden;
+			}
+		</style>
+	</head>
+
+	<body marginwidth="0" marginheight="0">
+		<style>
+			.layui-top-box {
+				padding: 40px 20px 20px 20px;
+				color: #fff;
+			}
+			
+			.panel {
+				margin-bottom: 17px;
+				background-color: #fff;
+				border: 1px solid transparent;
+				border-radius: 3px;
+				-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+				box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+			}
+			
+			.panel-body {
+				padding: 15px;
+				margin-top: 15px;
+				margin-bottom: 15px;
+			}
+			
+			.panel-title {
+				margin-top: 0;
+				margin-bottom: 0;
+				font-size: 14px;
+				color: inherit;
+			}
+			
+			.label {
+				display: inline;
+				padding: .2em .6em .3em;
+				font-size: 75%;
+				font-weight: 700;
+				line-height: 1;
+				color: #fff;
+				text-align: center;
+				white-space: nowrap;
+				vertical-align: baseline;
+				border-radius: .25em;
+				margin-top: .3em;
+			}
+			
+			.top-panel {
+				border: 1px solid #eceff9;
+				border-radius: 5px;
+				text-align: center;
+			}
+			
+			.top-panel>.layui-card-body {
+				height: 30px;
+				color: black;
+			}
+			
+			.top-panel-number {
+				line-height: 30px;
+				font-size: 20px;
+				border-right: 1px solid #eceff9;
+			}
+			
+			.top-panel-tips {
+				line-height: 30px;
+				font-size: 12px;
+				text-align: left;
+				padding-left: 10px;
+			}
+			
+			.layui-card:last-child {
+				margin-bottom: 0;
+				margin-left: 10px;
+				margin-right: 10px;
+			}
+			
+			.wallet div {
+				line-height: 25px;
+				font-size: 12px;
+			}
+			
+			.wallet div span {
+				font-weight: bold;
+			}
+			
+			.row {
+				line-height: 15px;
+			}
+			
+			.title {
+				margin-top: 10px;
+				font-size: 10px;
+				line-height: 0px;
+			}
+			.jingshi{
+				margin-left: 20px;
+				font-size: 15px;
+				margin-top: 20px;
+			}
+			.jingshitxt{
+				font-size:25px ;
+			}
+		</style>
+		<div class="layuimini-container layuimini-page-anim">
+			{if $is_mobile}
+			<!-- 顶部右侧添加选项卡监听 -->
+            <div style="width: 400px;height:0px;visibility:hidden;" >
+			{else}
+			<div style="width: 400px;">
+			  
+			{/if}
+				<font style="color: red;">*手续费知识:</font><br />
+				
+				在波场中转账trx主要消耗带宽作手续费，每个账号每天波场送1500带宽，大概能支持4笔Trx转账费用，消耗完就会用trx直接抵扣费用；
+				</br>
+				自新加坡时间2023-02-05 14:00:00起,波场 83号关于开启动态能量的提议正式生效。
+				</br>
+				波场目前转账手续费是正常的2.2倍左右,每次转账成本如下:
+				</br>
+				燃烧价值
+				1 TRX = 1000 带宽
+				转账消耗345带宽
+				质押、解压各消耗280带宽
+				</br>
+				对方地址有U大概:13-14TRX,能量31895，大约质押1805
+				</br>
+				对方地址无U大概:27-30TRX,能量64895， 大约质押3673
+				</br>
+				合计约1-2U/笔,小额兑换成本较高
+				请大家钱包尽量预留15TRX以上,防止TRX不足带来不便
+			</div>
+			<div class="jingshi" id="jingshidiv" style="display: none;">
+				<table>
+					<tr>
+						<td style="text-align: right;">系统积分：</td>
+						<td style="margin-left: 10px;"><font style="font-size: 25px;" id="jifen">2121</font><font></font></td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">USDT转账账户余额：</td>
+						<td style="margin-left: 10px;"><font style="font-size: 25px;" id="usdtyue">2121</font><font></font></td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">USDT账号剩余能量：</td>
+						<td style="margin-left: 10px;"><font style="font-size: 25px;" id="energy">2121</font> <font></font></td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">TRX转账账户余额：</td>
+						<td style="margin-left: 10px;"><font style="font-size: 25px;"  id="trxyue">2121</font><font></font></td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">未分配钱包地址数量：</td>
+						<td style="margin-left: 10px;"><font style="font-size: 25px;"  id="weifenpei">2121</font><font>个</font></td>
+					</tr>
+				</table>
+			</div>
+			
+			
+						</div>
+		<div class="layui-layer-move"></div>
+	</body>
+	<script src="__PUBLIC__/static/Cs/layui20/layui.js" charset="utf-8"></script>
+	<script>
+	var loading;
+	layui.use(['laydate', 'form', 'element','laytpl', 'laypage'], function(){
+	    var laydate = layui.laydate;
+		var $ = layui.jquery,laypage = layui.laypage,layer = layui.layer;
+	   //执行一个laydate实例
+	    laydate.render({
+	      elem: '#start_time' //指定元素
+	    });
+	    laydate.render({
+	      elem: '#end_time' //指定元素
+	    });
+		$("#sousuo").click(function(){
+			initdata();
+		});	
+		initdata();
+		function initdata(){
+			
+			 var startday = $('#start_time').val();
+   			 var endday = $('#end_time').val();
+			 loading = layer.load(0, {
+		        shade: false,
+		        time: 2*1000
+		    });
+		    	$.ajax({
+	        	type:"post",
+	        	url:"{:url('Tongji/jingshi')}",
+	        	data:{},
+	        	async:true,
+	        	dataType:'json',
+	        	success:function(data){
+	        		if(data.code == 1){
+	        			$("#jingshidiv").show();
+	        			var weifenpei = data.data.weifenpei;
+	        			var usdtyue = data.data.usdtyue;
+	        			var trxyue = data.data.trxyue;
+	        			var jifen = data.data.jifen;
+	        			var energy = data.data.energy;
+	        			var min =  Math.floor(energy/64000);
+	        			var max =  Math.floor(energy/32000);
+	        			
+	        			if(jifen<100){
+	        				jifen+="<font style='color:red;'>（积分小于100，积分不足会导致系统不归集，请前往积分信息-自助充值积分）</font>";
+	        			}
+	        			if(weifenpei<20){
+	        				weifenpei+="<font style='color:red;'>（充值钱包地址不足20个，请联系技术增加钱包）</font>";
+	        			}
+	        			if(trxyue<500){
+	        				trxyue+="TRX"+"<font style='color:red;'>（转账TRX钱包不足500，请检查）</font>";
+	        			}
+	        			if(usdtyue<50){
+	        				usdtyue+="USDT"+"<font style='color:red;'>（转账USDT钱包不足50，请检查）</font>";
+	        			}
+	        			if(energy<64000){
+	        				energy+=" "+"<font style='color:red;'>（剩余能量可能不足一笔提款）</font>";
+	        			}else
+	        			{
+	        			   energy+=" "+"（可以支持:<font style='color:red;'>"+min+"</font>~<font style='color:red;'>"+max+"</font>笔转账）"; 
+	        			}
+	        			
+	        			
+	        			$("#energy").html(energy);
+	        			$("#weifenpei").html(weifenpei);
+	        			$("#usdtyue").html(usdtyue);
+	        			$("#trxyue").html(trxyue);
+	        			$("#jifen").html(jifen);
+	        		}
+	        	}
+		    });
+			
+		}
+	});
+	</script>
+</html>

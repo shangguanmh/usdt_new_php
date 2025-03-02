@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/layui/css/layui.css"  media="all">
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+  <style>
+  	.layui-form-label{
+  		width: 100px;
+  	}
+  </style>
+</head>
+<body>            
+<form class="layui-form" style="margin-top: 10px;">
+  
+  <div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">设置时区：</label>
+      <div class="layui-input-inline" style="width: 500px;">
+
+       <select name="shiqu">
+           {foreach shiqulist as $key=>$vo}
+            
+            {if condition="($nshiqu eq $key)"}
+              <option value={$key} selected >{$vo}({$key})</option>
+              {else /} 
+              <option value={$key}  >{$vo}({$key})</option>
+              {/if}
+
+            {/foreach}
+       </select>
+       现在时区是：（{$nshiqu}）
+      </div>
+    </div>
+  </div>
+  
+   <div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">新用户真实体验金({$ZHB})</label>
+      <div class="layui-input-inline" style="width: 500px;">
+        <input name="tiyanjin"  lay-verify="required" class="layui-input"   value="{$tiyanjin}">
+         <span style="color: red;">*注意！注意！这个是真实赠送,比如设置10 {$ZHB}，相当于真实充值了10 {$ZHB}</span>
+      </div>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">虚假体验金({$ZHB})</label>
+      <div class="layui-input-inline" style="width: 500px;">
+        <input name="xjtiyanjin"  lay-verify="required" class="layui-input"   value="{$xjtiyanjin}">
+        <span style="color: red;">*虚假的显示,只是好看而已,比如设置赠送8000 {$ZHB},没有实际作用</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">最低充值金额({$ZHB})</label>
+      <div class="layui-input-inline" style="width: 500px;">
+        <input name="zuidichongzhi"  lay-verify="required" class="layui-input"   value="{$zuidichongzhi}">
+        <span style="color: red;">*这个只是字眼上显示,比如设置了10 {$ZHB}，其实对方充值1 {$ZHB}也会上分</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">是否显示vip0</label>
+      <div class="layui-input-inline" style="width: 500px;">
+        <input name="isShowvip0"  lay-verify="required" class="layui-input"   value="{$isShowvip0}">
+        <span style="color: red;">*只能输入0和1,0表示不显示,1表示显示.设置0后用户前端将看不到vip0</span>
+      </div>
+    </div>
+  </div>
+  
+  
+   <div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label" style="">验证安全密码</label>
+      <div class="layui-input-inline" style="">
+        <input name="anquan_pwd"  lay-verify="required" class="layui-input"  type="password"  value="">
+      </div>
+    </div>
+  </div>
+   
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-filter="demo1" id="tijiao" lay-submit="">保存</button>
+    </div>
+  </div>
+</form>
+<script src="__PUBLIC__/static/Cs/frame/layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+var isfirst =true;
+var qktype =1;
+var qkpkid = 0;
+layui.use(['form','layer'], function(){
+  var form = layui.form(),layer = layui.layer,$ = layui.jquery;
+  //监听提交
+  form.on('submit(demo1)', function(data){
+	$("#tijiao").hide();
+    $.post("{:url('User/tiyanjin')}",data.field,function(res){
+        if(res.code ==1){
+            layer.msg(res.msg,{time:1800,icon: 1},function(){
+                window.location.reload();
+            });
+        }else{
+  				$("#tijiao").show();
+            layer.msg(res.msg,{time:1800,icon: 5});
+        }
+    },'json');
+    return false;
+  });
+});
+</script>
+
+</body>
+</html>

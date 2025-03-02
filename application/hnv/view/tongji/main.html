@@ -1,0 +1,546 @@
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>fafahuotai</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link id="" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/layui.css" media="all">
+		<link id="" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/font-awesome.min.css" media="all">
+		<link id="" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/iconfont.css" media="all">
+		<!--<link id="layuicss-layer" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/layer/default/layer.css?v=3.1.1" media="all">-->
+		<link id="layuicss-skincodecss" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/code.css" media="all">
+			<link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/layui/css/layui1.css">
+    	<link rel="stylesheet" href="__PUBLIC__/static/Cs/css/style.css">
+  <link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/layui/css/layui.css"  media="all">
+		<style>
+			.cke {
+				visibility: hidden;
+			}
+		</style>
+	</head>
+
+	<body marginwidth="0" marginheight="0">
+		<style type="text/css">
+				table {
+				border-collapse: collapse;
+				margin: 0 auto;
+				text-align: center;
+				}
+			
+				table td, table th {
+				border: 1px solid #cad9ea;
+				color: #666;
+				padding: 10px 10px;
+				height: 30px;
+				}
+			
+				table thead th {
+				background-color: #CCE8EB;
+				width: 100px;
+				}
+			
+				table tr:nth-child(odd) {
+				background: #fff;
+				}
+			
+				table tr:nth-child(even) {
+				background: #F5FAFA;
+				}
+			</style>
+		<style>
+			.layui-top-box {
+				padding: 40px 20px 20px 20px;
+				color: #fff;
+			}
+			
+			.panel {
+				margin-bottom: 17px;
+				background-color: #fff;
+				border: 1px solid transparent;
+				border-radius: 3px;
+				-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+				box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+			}
+			
+			.panel-body {
+				padding: 15px;
+				margin-top: 15px;
+				margin-bottom: 15px;
+			}
+			
+			.panel-title {
+				margin-top: 0;
+				margin-bottom: 0;
+				font-size: 14px;
+				color: inherit;
+			}
+			
+			.label {
+				display: inline;
+				padding: .2em .6em .3em;
+				font-size: 75%;
+				font-weight: 700;
+				line-height: 1;
+				color: #fff;
+				text-align: center;
+				white-space: nowrap;
+				vertical-align: baseline;
+				border-radius: .25em;
+				margin-top: .3em;
+			}
+			
+			.top-panel {
+				border: 1px solid #eceff9;
+				border-radius: 5px;
+				text-align: center;
+			}
+			
+			.top-panel>.layui-card-body {
+				height: 30px;
+				color: black;
+			}
+			
+			.top-panel-number {
+				line-height: 30px;
+				font-size: 20px;
+				border-right: 1px solid #eceff9;
+			}
+			
+			.top-panel-tips {
+				line-height: 30px;
+				font-size: 12px;
+				text-align: left;
+				padding-left: 10px;
+			}
+			
+			.layui-card:last-child {
+				margin-bottom: 0;
+				margin-left: 10px;
+				margin-right: 10px;
+			}
+			
+			.wallet div {
+				line-height: 25px;
+				font-size: 12px;
+			}
+			
+			.wallet div span {
+				font-weight: bold;
+			}
+			
+			.row {
+				line-height: 15px;
+			}
+			
+			.title {
+				margin-top: 10px;
+				font-size: 10px;
+				line-height: 0px;
+			}
+			.jingshi{
+				margin-left: 200px;
+				font-size: 15px;
+				margin-top: 20px;
+			}
+			.jingshitxt{
+				font-size:25px ;
+			}
+		</style>
+		<div class="layuimini-container layuimini-page-anim">
+			<div class="layuimini-main layui-top-box">
+				<div class="layui-row layui-col-space10">
+					<div class="layui-col-md3">
+						<div class="col-xs-6 col-md-3">
+							<div class="panel layui-bg-cyan">
+								<div class="panel-body">
+									<div class="panel-title">
+										<span class="label pull-right layui-bg-blue">实时</span>
+										<h5>基础账户总额</h5>
+									</div>
+									<div class="panel-content">
+										<h1 class="no-margins" id="basic_money_sum">{$data.jichu_balance}</h1>
+										<div class="title">
+
+											<!--                                    <span>管理员增:</span><span style="color:red;" id="basic_administrator_increase">00</span>-->
+											<!--                                    <span>管理员减:</span><span style="color:green;" id="basic_administrator_minus">00</span>-->
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="layui-col-md3">
+						<div class="col-xs-6 col-md-3">
+							<div class="panel layui-bg-blue">
+								<div class="panel-body">
+									<div class="panel-title">
+										<span class="label pull-right layui-bg-cyan">实时</span>
+										<h5>佣金账户总额</h5>
+									</div>
+									<div class="panel-content">
+										<h1 class="no-margins" id="profit_money_sum">{$data.yongjin_balance}</h1>
+
+										<div class="title">
+											<!--                                    <span>佣金产出:</span><span style="color:red;" id="profit_money">00</span>-->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--<div class="layui-col-md3">
+						<div class="col-xs-6 col-md-3">
+							<div class="panel layui-bg-green">
+								<div class="panel-body">
+									<div class="panel-title">
+										<span class="label pull-right layui-bg-orange">实时</span>
+										<h5>理财账户总额</h5>
+									</div>
+									<div class="panel-content">
+										<h1 class="no-margins" id="experience_money_sum">{$data.licai_balance}</h1>
+										<div class="title">
+											<span></span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>-->
+					<!--<div class="layui-col-md3">
+						<div class="col-xs-6 col-md-3">
+							<div class="panel layui-bg-orange">
+								<div class="panel-body">
+									<div class="panel-title">
+										<span class="label pull-right layui-bg-green">实时</span>
+										<h5>理财进行总余额</h5>
+									</div>
+									<div class="panel-content">
+										<h1 class="no-margins" id="financial_money_sum">{$data.licaiyue}</h1>
+										<div class="title">
+											<span></span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>-->
+				</div>
+			</div>
+			<div>
+				<table class="shouchongdata">
+					<tr>
+						<th>今日注册人数</th>
+						<th>今日充值笔数</th>
+						<th>今日充值人数</th>
+						<th>今日首充人数</th>
+						<th>今日首充金额</th>
+					</tr>
+					<tr>
+						<th>{$zhucerenshu}</th>
+						<th>{$chongzhibishu}</th>
+						<th>{$chongzhirenshu}</th>
+						<th>{$shouchongrenshu}</th>
+						<th>{$shouchongjine}<font style="color: red;">{$ZHB}</font></th>
+					</tr>
+					
+				</table>
+			</div>
+			<div class="layui-col-xs12" style="margin-top:40px;margin-left: 14px;">
+						<div class="panel layui-bg-number">
+							<div class="panel-body" style="padding-left: 0px;margin-top:0px;margin-bottom:0px;">
+								<form class="layui-form layui-form-pane" action="" method="post">
+									<div class="layui-form-item" style="color:black;">
+										<div class="layui-inline">
+											<label class="layui-form-label">开始时间</label>
+											<div class="layui-input-inline">
+												<input type="text" id="start_time" name="start_time" autocomplete="off" class="layui-input" placeholder="yyyy-MM-dd" lay-key="1" value="{$today}">
+											</div>
+										</div>
+										<div class="layui-inline">
+											<label class="layui-form-label">结束时间</label>
+											<div class="layui-input-inline">
+												<input type="text" id="end_time" name="end_time" autocomplete="off" class="layui-input" placeholder="yyyy-MM-dd" lay-key="2" value="{$today}">
+											</div>
+										</div>
+										<div class="layui-inline">
+											<a type="submit" class="layui-btn layui-btn-primary" id="sousuo" lay-submit="" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索
+                                    </a>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+			</div>
+			<div style="margin-left: 14px;" >以下数据统计时间段：<font id="tongjishijian"></font></div>
+			<div class="layuimini-main layui-top-box" style="padding:10px 5px 5px 5px;">
+				<div class="layui-row layui-col-space10">
+					<div class="layui-col-md12">
+						<div class="layui-col-xs12 layui-col-md3">
+							<div class="layui-card top-panel">
+								<div class="layui-card-header">新增人数</div>
+								<div class="layui-card-body">
+									<div class="layui-row layui-col-space5">
+										<div class="layui-col-xs8 layui-col-md8 top-panel-number" id="newUsercount">0</div>
+										<div class="layui-col-xs4 layui-col-md4 top-panel-tips">
+											充值
+											<a style="color: #1aa094" id="newchongzhi">0</a><br>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs12 layui-col-md3">
+							<div class="layui-card top-panel">
+								<div class="layui-card-header">提现金额</div>
+								<div class="layui-card-body">
+									<div class="layui-row layui-col-space5">
+										<div class="layui-col-xs3 layui-col-md3 top-panel-number" style="font-size:10px;line-height: 15px;">
+											<span>总金额</span>
+											<br>
+											<span id="withdrawal_money">0</span>
+										</div>
+
+										<div class="layui-col-xs6 layui-col-md6 top-panel-number" style="font-size:8px;line-height: 45px;">
+											<div>
+												<div class="layui-col-xs12 layui-col-md12 row"> TRX提现：
+													<a style="color: #1aa094" id="withdrawal_money_trx">0</a>
+												</div>
+												<div class="layui-col-xs12 layui-col-md12 row"> USDT提现：
+													<a style="color: #bd3004" id="withdrawal_money_usdt">0</a>
+												</div>
+											</div>
+										</div>
+										<div class="layui-col-xs3 layui-col-md3 top-panel-tips">
+											<div>
+												<div class="layui-col-xs12 layui-col-md12 row"> 人数
+													<a style="color: #1aa094" id="tixianrenshu">0</a>
+												</div>
+												<div class="layui-col-xs12 layui-col-md12 row"> 笔数
+													<a style="color: #bd3004" id="tixianbishu">0</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="layui-col-xs12 layui-col-md3">
+							<div class="layui-card top-panel">
+								<div class="layui-card-header">充值金额</div>
+								<div class="layui-card-body">
+									<div class="layui-row layui-col-space5">
+											<div class="layui-col-xs3 layui-col-md3 top-panel-number" style="font-size:10px;line-height: 15px;">
+											<span>总金额</span>
+											<br>
+											<span id="chongzhi_money">0</span>
+										</div>
+
+										<div class="layui-col-xs6 layui-col-md6 top-panel-number" style="font-size:8px;line-height: 45px;">
+											<div>
+												<div class="layui-col-xs12 layui-col-md12 row"> TRX充值：
+													<a style="color: #1aa094" id="chongzhi_money_trx">0</a>
+												</div>
+												<div class="layui-col-xs12 layui-col-md12 row"> USDT充值：
+													<a style="color: #bd3004" id="chongzhi_money_usdt">0</a>
+												</div>
+											</div>
+										</div>
+										<div class="layui-col-xs3 layui-col-md3 top-panel-tips">
+											<div>
+												<div class="layui-col-xs12 layui-col-md12 row"> 人数
+													<a style="color: #1aa094" id="chongzhirenshu">0</a>
+												</div>
+												<div class="layui-col-xs12 layui-col-md12 row"> 笔数
+													<a style="color: #bd3004" id="chongzhibishu">0</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--<div class="layui-col-xs12 layui-col-md3">
+							<div class="layui-card top-panel">
+								<div class="layui-card-header">归集金额</div>
+								<div class="layui-card-body">
+									<div class="layui-row layui-col-space6">
+										<div class="layui-col-xs7 layui-col-md7 top-panel-number" style="font-size:15px;line-height: 45px;">
+											<div>
+												<div class="layui-col-xs12 layui-col-md12 row"> trx：
+													<a style="color: #1aa094" id="notional_pooling_money">0</a>
+												</div>
+												<div class="layui-col-xs12 layui-col-md12 row"> usdt：
+													<a style="color: #bd3004" id="notional_pooling_trx20_money">0</a>
+												</div>
+											</div>
+										</div>
+
+										<div class="layui-col-xs3 layui-col-xs3 top-panel-number" style="font-size:10px;line-height: 15px;">
+											<span>手续费</span>
+											<br>
+											<span id="notional_pooling_fee">0</span>
+										</div>
+										<div class="layui-col-xs2 layui-col-xs2 top-panel-tips" style="font-size:10px;line-height: 15px;">
+											<span>笔数</span>
+											<br>
+											<span id="notional_pooling_count">0</span>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>-->
+					</div>
+					<div class="layui-col-md12">
+						<div class="layui-col-xs12 layui-col-md3">
+							<div class="layui-card top-panel">
+								<div class="layui-card-header">领取任务金额</div>
+								<div class="layui-card-body">
+									<div class="layui-row layui-col-space5">
+										<div class="layui-col-xs8 layui-col-md8 top-panel-number" id="wakuangJine">0</div>
+										<div class="layui-col-xs4 layui-col-md4 top-panel-tips">
+											人数
+											<a style="color: #1aa094" id="wakuangrenshu">0</a><br>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--<div class="layui-col-xs12 layui-col-md3">
+							<div class="layui-card top-panel">
+								<div class="layui-card-header">账户转账</div>
+								<div class="layui-card-body">
+									<div class="layui-row layui-col-space5">
+										<div class="layui-col-xs6 layui-col-md6 top-panel-number" style="font-size:10px;line-height: 15px;">
+											<span>基础账户转入</span>
+											<br>
+											<span id="basic_transfer_money">0</span>
+										</div>
+										<div class="layui-col-xs6 layui-col-md6 top-panel-number" style="border-right:none;font-size:10px;line-height: 15px;">
+											<span>佣金账户转出</span>
+											<br>
+											<span id="profit_transfer_money">0</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>-->
+						<!--<div class="layui-col-xs12 layui-col-md3">
+							<div class="layui-card top-panel">
+								<div class="layui-card-header">返利统计:<font id="zonggonglixi" style="color: red;font-weight: bold;">0</font>USDT</div>
+								<div class="layui-card-body">
+									<div class="layui-row layui-col-space5">
+										<div class="layui-col-xs4 layui-col-xs4 top-panel-number" style="font-size:10px;line-height: 15px;">
+											<span>充值返利</span>
+											<br>
+											<span id="thisczfl">0</span>
+										</div>
+										<div class="layui-col-xs4 layui-col-xs4 top-panel-number" style="font-size:10px;line-height: 15px;">
+											<span>挖矿返利</span>
+											<br>
+											<span id="wakuangfanli">0</span>
+										</div>
+										<div class="layui-col-xs4 layui-col-xs4 top-panel-number" style="border-right:none;font-size:10px;line-height: 15px;">
+											<span>理财收益</span>
+											<br>
+											<span id="licaishouyi">0</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>-->
+						<!--<div class="layui-col-xs12 layui-col-md3">
+							<div class="layui-card top-panel">
+								<div class="layui-card-header">理财金额</div>
+								<div class="layui-card-body">
+									<div class="layui-row layui-col-space5">
+										<div class="layui-col-xs6 layui-col-md6 top-panel-number" style="font-size:10px;line-height: 15px;">
+											<span>理财购买</span>
+											<br>
+											<span id="licaigoumai">0</span>
+										</div>
+										<div class="layui-col-xs6 layui-col-md6 top-panel-number" style="border-right:none;font-size:10px;line-height: 15px;">
+											<span>理财赎回</span>
+											<br>
+											<span id="licaidaoqi">0</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>-->
+					</div>
+				</div>
+			</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="layui-layer-move"></div>
+	</body>
+	<script src="__PUBLIC__/static/Cs/layui20/layui.js" charset="utf-8"></script>
+	<script>
+	var loading;
+	layui.use(['laydate', 'form', 'element','laytpl', 'laypage'], function(){
+	    var laydate = layui.laydate;
+		var $ = layui.jquery,laypage = layui.laypage,layer = layui.layer;
+	   //执行一个laydate实例
+	    laydate.render({
+	      elem: '#start_time' //指定元素
+	    });
+	    laydate.render({
+	      elem: '#end_time' //指定元素
+	    });
+		$("#sousuo").click(function(){
+			initdata();
+		});	
+		initdata();
+		function initdata(){
+			
+			 var startday = $('#start_time').val();
+   			 var endday = $('#end_time').val();
+			 loading = layer.load(0, {
+		        shade: false,
+		        time: 2*1000
+		    });
+			$.ajax({
+	        	type:"post",
+	        	url:"{:url('Tongji/xiangxidata')}",
+	        	data:{startday:startday,endday:endday},
+	        	async:true,
+	        	dataType:'json',
+	        	success:function(data){
+	        		if(data.code == 1){
+	        			var thisdata = data.data;
+	        			$("#tongjishijian").html(thisdata.tongjishijian);
+	        			$("#newUsercount").html(thisdata.newUsercount);
+	        			$("#newchongzhi").html(thisdata.newchongzhi);
+	        			$("#withdrawal_money").html(thisdata.withdrawal_money);
+	        			$("#withdrawal_money_trx").html(thisdata.withdrawal_money_trx);
+	        			$("#withdrawal_money_usdt").html(thisdata.withdrawal_money_usdt);
+	        			$("#tixianrenshu").html(thisdata.tixianrenshu);
+	        			$("#tixianbishu").html(thisdata.tixianbishu);
+	        			$("#chongzhi_money").html(thisdata.chongzhi);
+	        			$("#chongzhirenshu").html(thisdata.chongzhirenshu);
+	        			$("#chongzhibishu").html(thisdata.chongzhibishu);
+	        			$("#wakuangJine").html(thisdata.wakuangJine);
+	        			$("#wakuangrenshu").html(thisdata.wakuangrenshu);
+	        			$("#thisczfl").html(thisdata.thisczfl);
+	        			$("#wakuangfanli").html(thisdata.wakuangfanli);
+	        			$("#licaishouyi").html(thisdata.licaishouyi);
+	        			$("#zonggonglixi").html(Math.round(thisdata.thisczfl+thisdata.wakuangfanli+thisdata.licaishouyi,3));
+	        			$("#licaigoumai").html(thisdata.licaigoumai);
+	        			$("#licaidaoqi").html(thisdata.licaidaoqi);
+	        			$("#chongzhi_money_usdt").html(thisdata.chongzhi_money_usdt);
+	        			$("#chongzhi_money_trx").html(thisdata.chongzhi_money_trx);
+	        		}
+	        	}
+		    });
+		}
+	});
+	</script>
+</html>

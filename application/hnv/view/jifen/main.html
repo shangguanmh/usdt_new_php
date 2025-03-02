@@ -1,0 +1,250 @@
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>fafahuotai</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link id="" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/layui.css" media="all">
+		<link id="" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/font-awesome.min.css" media="all">
+		<link id="" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/iconfont.css" media="all">
+		<!--<link id="layuicss-layer" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/layer/default/layer.css?v=3.1.1" media="all">-->
+		<link id="layuicss-skincodecss" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/code.css" media="all">
+			<link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/layui/css/layui1.css">
+    	<link rel="stylesheet" href="__PUBLIC__/static/Cs/css/style.css">
+  <link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/layui/css/layui.css"  media="all">
+		<style>
+			.cke {
+				visibility: hidden;
+			}
+		</style>
+	</head>
+
+	<body marginwidth="0" marginheight="0">
+		<style>
+			.layui-top-box {
+				padding: 40px 20px 20px 20px;
+				color: #fff;
+			}
+			
+			.panel {
+				margin-bottom: 17px;
+				background-color: #fff;
+				border: 1px solid transparent;
+				border-radius: 3px;
+				-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+				box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+			}
+			
+			.panel-body {
+				padding: 15px;
+				margin-top: 15px;
+				margin-bottom: 15px;
+			}
+			
+			.panel-title {
+				margin-top: 0;
+				margin-bottom: 0;
+				font-size: 14px;
+				color: inherit;
+			}
+			
+			.label {
+				display: inline;
+				padding: .2em .6em .3em;
+				font-size: 75%;
+				font-weight: 700;
+				line-height: 1;
+				color: #fff;
+				text-align: center;
+				white-space: nowrap;
+				vertical-align: baseline;
+				border-radius: .25em;
+				margin-top: .3em;
+			}
+			
+			.top-panel {
+				border: 1px solid #eceff9;
+				border-radius: 5px;
+				text-align: center;
+			}
+			
+			.top-panel>.layui-card-body {
+				height: 30px;
+				color: black;
+			}
+			
+			.top-panel-number {
+				line-height: 30px;
+				font-size: 20px;
+				border-right: 1px solid #eceff9;
+			}
+			
+			.top-panel-tips {
+				line-height: 30px;
+				font-size: 12px;
+				text-align: left;
+				padding-left: 10px;
+			}
+			
+			.layui-card:last-child {
+				margin-bottom: 0;
+				margin-left: 10px;
+				margin-right: 10px;
+			}
+			
+			.wallet div {
+				line-height: 25px;
+				font-size: 12px;
+			}
+			
+			.wallet div span {
+				font-weight: bold;
+			}
+			
+			.row {
+				line-height: 15px;
+			}
+			
+			.title {
+				margin-top: 10px;
+				font-size: 10px;
+				line-height: 0px;
+			}
+			.jingshi{
+				margin-left: 200px;
+				font-size: 15px;
+				margin-top: 20px;
+			}
+			.jingshitxt{
+				font-size:25px ;
+			}
+			  <style type="text/css">
+        table
+        {
+            border-collapse: collapse;
+            margin: 0 auto;
+            text-align: center;
+        }
+        table td, table th
+        {
+            border: 1px solid #cad9ea;
+            color: #666;
+            height: 30px;
+            padding: 5px 5px;
+            /*width: 500px;*/
+        }
+        table thead th
+        {
+            background-color: #CCE8EB;
+            width: 100px;
+        }
+        table tr:nth-child(odd)
+        {
+            background: #fff;
+        }
+        table tr:nth-child(even)
+        {
+            background: #F5FAFA;
+        }
+    </style>
+		</style>
+		<div class="layuimini-container layuimini-page-anim" style="text-align: center;margin-left: 30%;padding-top: 50px;">
+				<table style="">
+					<tr>
+						<td style="text-align: right;">系统积分：</td>
+						<td style="margin-left: 10px;"><font style="font-size: 25px;" id="jifen"></font><font></font></td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">系统抽成比：</td>
+						<td style="margin-left: 10px;"><font id="choucheng"></font>%(充值<font id="jisuanchouc"></font>{$ZHB}=100积分)</td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">上分钱包：</td>
+						<td style="margin-left: 10px;"><input class="layui-input" style="width: 400px;display: inline;"  id="qianbao"  /><a class="layui-btn" id="fuzhi" style="cursor: pointer;">复制</a></td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">钱包二维码：</td>
+						<td style="margin-left: 10px;"><div style='width: 150px;height: 150px;' id="erweima" ></div></td>
+					</tr>
+						<tr>
+						<td colspan="2" style="text-align: center;" ><a id="yichongzhi" class="layui-btn" onclick="yichongzhi()">已充值</a></td>
+					</tr>
+				</table>
+			
+		</div>
+		<div class="layui-layer-move"></div>
+	</body>
+	<script src="__PUBLIC__/static/Cs/js/jquery.min.js" charset="utf-8"></script>
+	<script src="__PUBLIC__/static/Cs/js/jquery.qrcode.min.js" charset="utf-8"></script>
+	<script src="__PUBLIC__/static/Cs/layer/layer.js" charset="utf-8"></script>
+	<script>
+	   //执行一个laydate实例
+	   initdata();
+	   function initdata(){
+		   $.ajax({
+		        	type:"post",
+		        	url:"{:url('Jifen/getdata')}",
+		        	data:{},
+		        	async:true,
+		        	dataType:'json',
+		        	success:function(data){
+		        		if(data.code == 1){
+		        			$("#jingshidiv").show();
+		        			var qianbao = data.data.qianbao;
+		        			var choucheng = data.data.choucheng;
+		        			var jifen = data.data.jifen;
+		        			
+		        			
+		        			choucheng = Math.round(choucheng*100,2);
+		        			$("#qianbao").val(qianbao);
+		        			$("#choucheng").html(choucheng);
+		        			$("#jisuanchouc").html(choucheng);
+		        			$("#jifen").html(jifen);
+									$('#erweima').qrcode({
+								    render: "canvas",
+								    text: qianbao,
+								    width: "150",               // 二维码的宽度
+								    height: "150",              // 二维码的高度
+								    background: "#ffffff",      // 二维码的后景色
+								    foreground: "#000000"       // 二维码的前景色
+								});
+	
+		        		}
+		        	}
+			    });
+	   }
+		    $("#fuzhi").click(function(){
+		    	copy();
+		    });
+	   function copy()
+	{
+	    var Url2=document.getElementById("qianbao");
+	    Url2.select();
+	    document.execCommand("Copy");
+	    layer.msg("复制成功");
+	}
+	function yichongzhi(){
+		$("#yichongzhi").hide();
+		 $.ajax({
+	        	type:"post",
+	        	url:"{:url('Jifen/chongzhichaxun')}",
+	        	data:{},
+	        	async:true,
+	        	dataType:'json',
+	        	success:function(res){
+				 	$("#yichongzhi").show();
+                if(res.code  == 1){
+					            layer.msg(res.msg,{time:1800,icon: 1},function(){
+	  		          		  window.location.reload();
+					            });
+					       	 }else{
+					            layer.alert(res.msg,{time:1800,icon: 5});
+					       	 }
+			        	}
+		    });
+	}
+	   
+	</script>
+</html>

@@ -1,0 +1,223 @@
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title></title>
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="__PUBLIC__/static/woshop/bootstrap.min.css" rel="stylesheet">
+		<link href="__PUBLIC__/static/woshop/font-awesome.css" rel="stylesheet">
+		<link href="__PUBLIC__/static/woshop/style.css" rel="stylesheet">
+		<link id="" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/layui.css" media="all">
+		<script src="__PUBLIC__/static/woshop/jquery.min.js?v=2.1.4"></script>
+		<script src="__PUBLIC__/static/woshop/jquery-ui-1.10.4.custom.min.js"></script>
+		<link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/layui/css/layui.css" media="all">
+		<style>
+			input.error {
+				border: 1px solid red;
+			}
+			
+			span.error {
+				padding-top: 10px;
+				color: #f00;
+				font-size: 12px;
+			}
+			
+			.remarks {
+				color: #ff0000;
+				font-size: 16px;
+			}
+			
+			.spec_item_thumb {
+				position: relative;
+			}
+			
+			.spec_item_thumb i {
+				position: absolute;
+				top: -5px;
+				right: -5px;
+			}
+			
+			.guigediv {
+				font-size: 10px;
+			}
+			
+			.tianjiaimg {
+				background-image: url(__PUBLIC__/static/Cs/layui20/add.png);
+				background-repeat: no-repeat;
+				background-position: center;
+				cursor: pointer;
+			}
+			.layui-input{
+				width: 100px;
+			}
+		</style>
+		<script>
+			var pnum = 1;
+			var filter = 0;
+			var url = "/admin/goods/lst/filter/" + filter + ".html?page=" + pnum;
+			var updateUrl = "/admin/goods/post.html";
+		</script>
+		<link rel="stylesheet" href="__PUBLIC__/static/Cs/layui20/css/layui.css" media="all">
+		<script src="__PUBLIC__/static/Cs/frame/layui/layui.js" charset="utf-8"></script>
+	</head>
+
+	<body class="gray-bg" style="">
+		<div class="wrapper wrapper-content" style="">
+			<div class="row" style="">
+				<div class="col-sm-12" style="">
+					<div class="ibox float-e-margins" style="width: 100%;text-align: center;margin-bottom: 20px;">
+					<form style="" class="layui-form" action="{:url('tuan/lookxiaxian')}" method="get" id="sousuoForm">
+					    
+					    用户id:({$user.id}) ->>用户名：{$user.tel}{$user.email}
+					    
+					<div style="">
+						开始：<input id="start_time" name="start_time" class="layui-input" style="display: inline;width: 100px;" type="text" style="" placeholder="开始时间" value="{$start_time}">
+						
+						&nbsp;&nbsp;结束：<input id="end_time"  name="end_time"  class="layui-input" style="display: inline;width: 100px;" type="text" style="" placeholder="结束时间" value="{$end_time}">
+					
+						<input type="hidden" name="data_id" value="{$data_id}" />
+						<button type="submit" class="layui-btn btn-add btn-danger" style=""  id="chaxun">查询</button>
+						</form>
+					</div>
+		<br />				<div style="margin-left: 50px;display:inline;">{$shijian}：<b style="color: red;">{$chongzhi.chonghizAll}</b>{$ZHB}，&nbsp;充值人数：<b style="color: red;">{$chongzhi.chongzhirenshu}</b></div>
+						（<div style="display:inline;">TRX充值：<b style="color: red;">{$chongzhi.chonghiz_trx}</b>TRX</div>
+						<div style="display:inline;">USDT充值：<b style="color: red;">{$chongzhi.chonghiz_usdt}</b>USDT</div>）
+		
+						<div class="ibox-content" style="">
+							<div class="tabs-container" style="">
+								<ul class="nav nav-tabs">
+									<li class="active">
+										<a data-toggle="tab" href="#tab_1" aria-expanded="true">一级({$data.yijicount})</a>
+									</li>
+									<li class="">
+										<a data-toggle="tab" href="#tab_2" aria-expanded="false">二级({$data.erjicount})</a>
+									</li>
+									<li class="">
+										<a data-toggle="tab" href="#tab_3" aria-expanded="false">三级({$data.sanjicount})</a>
+									</li>
+    								<a class="layui-btn btn-add btn-danger" style="float: right;"  id="jinzhituandenglu">禁止团队登录</a>
+								</ul>
+											<form class="layui-form" style="margin-top: 10px;">
+								<div class="tab-content" style="">
+									<div id="tab_1" class="tab-pane active">
+										<div class="panel-body">
+											<table class="layui-table layui-form">
+												<thead>
+													<th>用户</th>
+													<th>总充值（{$ZHB}）</th>
+													<th>加入时间</th>
+													<th>注册IP</br>最后登录</th>
+												</thead>
+									 	   {volist name="data.yijilist" id="list"}
+									 	   		<tr>
+													<td>{$list.id} </br>{$list.email} </br>{$list.tel}</td>
+													<td> {$list.xfje}</td>
+													<td> {$list.add_time}</td>
+													<td> {$list.zhuce_ip}</td>
+													</tr>
+                 		   {/volist}
+											</table>
+										</div>
+									</div>
+									<div id="tab_2" class="tab-pane">
+										<div class="panel-body">
+											<table class="layui-table layui-form">
+												<thead>
+													<th>用户</th>
+													<th>总充值（{$ZHB}）</th>
+													<th>加入时间</th>
+													<th>注册IP</br>最后登录</th>
+												</thead>
+									 	   {volist name="data.erjilist" id="list"}
+									 	   		<tr>
+													<td>{$list.id} </br>{$list.email} </br>{$list.tel}</td>
+													<td> {$list.xfje}</td>
+													<td> {$list.add_time}</td>
+													<td> {$list.zhuce_ip}</td>
+													</tr>
+                 		   {/volist}
+											</table>
+										</div>
+									</div>
+										<div id="tab_3" class="tab-pane">
+										<div class="panel-body">
+											<table class="layui-table layui-form">
+												<thead>
+													<th>用户</th>
+													<th>总充值（{$ZHB}）</th>
+													<th>加入时间</th>
+													<th>注册IP</br>最后登录</th>
+												</thead>
+									 	   {volist name="data.sanjilist" id="list"}
+									 	   		<tr>
+													<td>{$list.id} </br>{$list.email} </br>{$list.tel}</td>
+													<td> {$list.xfje}</td>
+													<td> {$list.add_time}</td>
+													<td> {$list.zhuce_ip}</td>
+													</tr>
+                 		   {/volist}
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+
+		<script src="__PUBLIC__/static/woshop/bootstrap.min.js"></script>
+		<!-- 自定义js -->
+		<script type="text/javascript">
+			//实例化编辑器
+		</script>
+	</body>
+	<script src="__PUBLIC__/static/Cs/layui20/layui.js" charset="utf-8"></script>
+	<script>
+		//单击图片删除图片 【注册全局函数】
+		var isfirst =true;
+		var $;
+		layui.use(['laydate', 'form', 'element','laytpl', 'laypage'], function(){
+	    var laydate = layui.laydate;
+		var $ = layui.jquery,laypage = layui.laypage,layer = layui.layer;
+	   //执行一个laydate实例
+	    laydate.render({
+	      elem: '#start_time' //指定元素
+	    });
+	    laydate.render({
+	      elem: '#end_time' //指定元素
+	    });
+	});
+		   $('#jinzhituandenglu').on('click',function(){
+	 	  var notice = $(this).html();
+  	 	var data_id ='{$data_id}';
+	 		layer.confirm('确认要'+notice+'吗？', {
+			            btn : [ '确定', '取消' ]//按钮
+			        }, function(index) {
+			            layer.close(index);
+						$.ajax({
+				        	type:"post",
+				        	data:{data_id:data_id},
+				        	url:"{:url('tuan/jinzhituandenglu')}",
+				        	async:true,
+				        	dataType:'json',
+				        	success:function(res){
+						        if(res.code == 1){
+						            layer.msg('操作成功');
+	  		          		  window.location.reload();
+						        }else{
+						            layer.msg(res.msg,{time:1800,icon: 5});
+						        }
+						    }
+			        	});
+		        });
+	 
+	 });
+	</script>
+
+</html>

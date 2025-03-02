@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>居家办公平台</title>
+		<link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/layui/css/layui1.css">
+    	<link rel="stylesheet" href="__PUBLIC__/static/Cs/css/style.css">
+		<link rel="icon" href="__PUBLIC__/static/Cs/frame/static/image/code.png">
+	</head>
+
+	<body>
+
+		<!-- layout admin -->
+		<div class="layui-layout layui-layout-admin">
+			<!-- 添加skin-1类可手动修改主题为纯白，添加skin-2类可手动修改主题为蓝白 -->
+			<!-- header -->
+			<div class="layui-header my-header">
+				<a href="index.html">
+					<!--<img class="my-header-logo" src="__PUBLIC__/static/Cs/frame/static/image/code.png" alt="logo">-->
+					<div class="my-header-logo">爆单</div>
+				</a>
+            
+            <!--<div id="google_translate_element"></div>-->
+            
+	       {if $is_mobile}
+				<!-- 顶部右侧添加选项卡监听 -->
+
+			<ul class="layui-nav my-header-user-nav" lay-filter="side-top-right" style="visibility:hidden;">
+			{else}
+			<ul class="layui-nav my-header-user-nav" lay-filter="side-top-right" >
+			{/if}
+			
+			
+				    
+			<li lay-unselect="" class="layui-nav-item" style="text-align: center;pointer-events: none;">
+                <a style="line-height: 18px">
+                    TRX:<span id="tixian-trx" style="font-weight:bold;color: red;" >0</span>TRX<br>
+                    USDT:<span id="tixian-usdt" style="font-weight:bold;color: red;">0</span>U<br>
+                    能量:<span id="tixian-nengliang" style="font-weight:bold;color: red;">0</span></a>
+            </li>
+			
+			<li lay-unselect="" class="layui-nav-item" style="text-align: center;pointer-events: none;">
+                <a style="line-height: 24px">在线:(<span style="color:red;" id="zaixian">0</span>)  当地时间<br><span id="system-date">{:date('Y-m-d H:i:s')}</span></a>
+            </li>
+            
+			 <li lay-unselect="" class="layui-nav-item">
+                <a href="javascript:;" href-url="{:url('Invest/main')}">
+                    待充值
+                    <span class="layui-badge recharge">0</span>
+                </a>
+            </li>
+            <li lay-unselect="" class="layui-nav-item">
+                <a href="javascript:;" href-url="{:url('Invest/draw')}">
+                    待提现<span class="layui-badge deposit">0</span>
+                </a>
+            </li>
+				    
+				    
+			<li lay-unselect class="layui-nav-item"><a href="#" class="refresh-link">刷新</a>
+            </li>
+            
+            
+					<li class="layui-nav-item">
+						<a class="name" href="javascript:;"><img src="__PUBLIC__/static/Cs/frame/static/image/code.png" alt="logo"> {$cs_username} </a>
+						<dl class="layui-nav-child">
+							<dd>
+							   <a class="layui-btn layui-btn-mini layui-btn-warm change" style="height:30px;"><i class="layui-icon">&#8644;</i>修改密码</a>
+								<a href="{:url('Login/logout')}"><i class="layui-icon">&#x1006;</i>退出</a>
+								
+							</dd>
+						</dl>
+					</li>
+				</ul>
+			   
+			</div>
+			<!-- side -->
+			<div class="layui-side my-side" >
+				<div class="layui-side-scroll" >
+					<!-- 左侧主菜单添加选项卡监听 -->
+						<ul class="layui-nav layui-nav-tree" lay-filter="side-main" >
+						{volist name="list" id="data"}
+						<li class="layui-nav-item layui-nav-itemed" >
+							<a href="javascript:;"><i class="layui-icon">&#xe628;</i>{$data['name']}</a>
+							<dl class="layui-nav-child">
+								{volist name="data['list']" id="value"}
+									<dd id="dd{$value['id']}">
+										<a href="javascript:;" href-url="{$value['url']}"><i class="layui-icon">&#xe621;</i>{$value['name']}</a>
+									</dd>
+								{/volist}				
+							</dl>
+						</li>
+						{/volist}				
+					</ul>
+				</div>
+			</div>
+			<!-- body -->
+			<div class="layui-body my-body">
+				<div class="layui-tab layui-tab-card my-tab" lay-filter="card" lay-allowClose="true">
+					<ul class="layui-tab-title">
+						<li class="layui-this" lay-id="1"><span><i class="layui-icon">&#xe638;</i>消息</span></li>
+					</ul>
+					<div class="layui-tab-content">
+						<div class="layui-tab-item layui-show">
+							<iframe id="iframe" src="{:url('index/yujing')}" frameborder="0"></iframe>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- footer -->
+			<div class="layui-footer my-footer">
+				<p>
+				    {商城} 后台2.0
+					<a href="#" target="_blank"></a>
+				</p>
+				<p>copyright Packy © 版权所有</p>
+			</div>
+		</div>
+		<!-- 右键菜单 -->
+		<div class="my-dblclick-box none">
+			<table class="layui-tab dblclick-tab">
+				<tr class="card-refresh">
+					<td><i class="layui-icon">&#x1002;</i>刷新当前页面</td>
+				</tr>
+				<tr class="card-close">
+					<td><i class="layui-icon">&#x1006;</i>关闭当前页面</td>
+				</tr>
+			</table>
+			
+		</div>
+	 	<script src="__PUBLIC__static/plugs/jquery/jquery.min.js"></script>
+    	<script type="text/javascript" src="__PUBLIC__static/Cs/frame/layui/layui.js"></script>
+		<script type="text/javascript" src="__PUBLIC__/static/Cs/frame/static/js/index.js"></script>
+		<script src="__PUBLIC__static/plugs/require/require.js"></script>
+		
+    
+<!--    <div class="gtranslate_wrapper"></div>-->
+<!--<script>window.gtranslateSettings = {"default_language":"zh-CN","detect_browser_language":true,"languages":["zh-CN","en","ar","fr","bn","de","ru"],"wrapper_selector":".gtranslate_wrapper","switcher_horizontal_position":"right"}</script>-->
+<!--<script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>-->
+
+<style>
+    .layer-anim{
+        width: auto!important;
+    }
+    
+</style>
+
+<!--
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<span class="append_script"></span>
+
+
+
+		
+		<script>
+
+  function googleTranslateElementInit() {
+
+    new google.translate.TranslateElement({
+
+      pageLanguage: 'zh-CN',//默认语言
+
+      includedLanguages: 'zh-CN,en,hr,cs,da,nl,fr,de,el,iw,hu,ga,it,ja,ko,pt,ro,ru,sr,es,th,vi',  // 可选语言
+
+      autoDisplay: false,
+
+      gaTrack: false,
+
+      gaId: 'UA-4334041-9',
+
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+
+    }, 'google_translate_element');
+
+  }
+
+</script>
+
+<style>
+
+      .skiptranslate{
+
+          position: absolute;
+
+          top: 0;
+
+          z-index: 999;
+
+          /*display: none !important;*/
+
+      }
+        
+    .goog-gt-tt{
+        hidden;
+    }
+      .skiptranslate .skiptranslate{
+
+          display: none;
+
+      }
+
+     // google自动翻译的一些样式
+.goog-te-banner-frame {
+    display: none !important;
+}
+
+/*#google_translate_element, #goog-gt-tt {*/
+
+ #goog-gt-tt {
+    display: none !important;
+}
+
+
+
+      .goog-te-banner-frame.skiptranslate {
+
+display: none !important;
+
+}
+
+body {
+
+top: 0px !important;
+
+}
+
+  </style>
+
+-->
+
+		
+		
+		<script type="text/javascript" charset="utf-8">
+			var thispage='';
+			layui.use(['layer','form'], function() {
+			});
+			
+			
+			
+			layui.use(['jquery'], function($) {
+                 jQuery(document).on('click', '.refresh-link', function(e) {
+                e.preventDefault(); // 阻止默认的链接跳转行为
+                 location.reload(); // 刷新当前页面
+               });
+            });
+            
+            
+            $('.change').on('click',function(){
+  	 	        var data_id =$(this).parent().attr('data_id');
+				layer.open({
+				type:2,
+				title:'修改',
+				shadeClose:true,
+				shade:0.8,
+				area:['50%','80%'],
+				content:"{$changeAction}?data_id="+data_id
+			});
+	
+         });
+            
+			$(function () {
+             function getStatus() {
+            $.get("{:url('index/order_info')}", function (result) {
+                if (typeof result == 'string') result = JSON.parse(result);
+                console.log(result)
+                $('.recharge').html(result.recharge)
+                $('.deposit').html(result.deposit);
+                if (result.deposit > 0) {
+                    // var strAudio = "<audio id='audioPlay' src='/public/634.wav' hidden='true'>";
+                    // if ($("body").find("audio").length <= 0)
+                    //     $("body").append(strAudio);
+                    // var audio = document.getElementById("audioPlay");
+                    // //浏览器支持 audion
+                    // audio.play();
+                }
+                $('#tixian-trx').text(result.tixian_trx);
+                $('#tixian-usdt').text(result.tixian_usdt);
+                $('#tixian-nengliang').text(result.energy);
+                $('#system-date').text(result.date);
+                $('#zaixian').text(result.zaixian);
+            });
+        }
+
+        getStatus();
+        setInterval(function () {
+            getStatus();
+        }, 30000)
+    })
+    
+		</script>
+	</body>
+
+</html>
+

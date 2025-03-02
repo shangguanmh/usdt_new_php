@@ -1,0 +1,203 @@
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title></title>
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="__PUBLIC__/static/woshop/bootstrap.min.css" rel="stylesheet">
+		<link href="__PUBLIC__/static/woshop/font-awesome.css" rel="stylesheet">
+		<link href="__PUBLIC__/static/woshop/style.css" rel="stylesheet">
+		<link id="" rel="stylesheet" href="__PUBLIC__/static/Cs/tongji/layui.css" media="all">
+		<script src="__PUBLIC__/static/woshop/jquery.min.js?v=2.1.4"></script>
+		<script src="__PUBLIC__/static/woshop/jquery-ui-1.10.4.custom.min.js"></script>
+		<link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/layui/css/layui.css" media="all">
+		
+		<link rel="stylesheet" href="__PUBLIC__/static/Cs/layui20/css/layui.css" media="all">
+		<script src="__PUBLIC__/static/Cs/frame/layui/layui.js" charset="utf-8"></script>
+	</head>
+
+	<body class="gray-bg" style="">
+		<div class="wrapper wrapper-content" style="">
+			<div class="row" style="">
+				<div class="col-sm-12" style="">
+					<div class="ibox float-e-margins" style="width: 100%;margin-bottom: 20px;">
+							
+		
+						<div class="ibox-content" style="">
+						    
+			<form class="layui-form layui-card" action="{:request()->url()}" data-auto="true" method="post" autocomplete="off"  >
+ 			    
+			<div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <h3>出款账号TRX余额：<span style="color:red;">{$neee_trx} </span>TRX</h3>
+                
+                <h3>预估需要TRX：<span style="color:red;" id='needtrx'>0</span>TRX</h3>
+                
+                <h3>预估可以支持：<span style="color:red;" id='min'>0</span>~<span style="color:red;" id='max'>0</span>笔转账</h3>
+                
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">天数</label>
+            <div class="layui-input-block">
+                <select name="day" class="layui-select" id="selectList">
+                    <option value="3">3天</option>
+                    <option value="0">一小时</option>
+                    <option value="1">1天</option>
+                    
+                    
+                </select>
+            </div>
+            </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">地址</label>
+            <div class="layui-input-block">
+                <input name="receive_address" required placeholder="请输入钱包地址" value="{$pay_add}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label label-required">数量</label>
+            <div class="layui-input-block">
+                <input name="amount" required placeholder="请输入购买能量数量，最少32000" class="layui-input" oninput="OnInput (event)">
+            </div>
+        </div>
+    
+    
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <h3  id='tixing' hidden="hidden"><span style="color:red;" >*目前可用TRX不足，可能购买失败</span></h3>
+                
+            </div>
+        </div>
+						    	
+		<div class="layui-form-item text-center">
+         <button class="layui-btn" type='submit' >提交</button>
+         </div>		
+							
+				
+        </form>			
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+
+		<script src="__PUBLIC__/static/woshop/bootstrap.min.js"></script>
+		
+		<script src="__PUBLIC__static/Cs/layui20/layui.js" charset="utf-8"></script>
+	<script>
+    var key = document.getElementById('needtrx');
+    var min = document.getElementById('min');
+    var max = document.getElementById('max');
+    var obj = document.getElementById('selectList');
+    var tixing = document.getElementById('tixing');
+    
+    var day = obj.value;
+    var num = 0;
+    
+    layui.use(['form', 'jquery'], function(){
+    var form = layui.form,$= layui.$;
+    
+    form.on('select', function(data){
+        //  console.log(data.elem); //得到select原始DOM对象
+        console.log(data.value); //得到被选中的值]
+        $("#day").val(data.value)
+        day = data.value;
+        // key.innerHTML = num*day; 
+        // console.log(num);
+         //加载中样式... 
+        // var loading = layer.msg('正在删除', {icon: 16, shade: 0.3, time:0});
+         updateCost();
+        // console.log(data.othis); //得到美化后的DOM对象
+      });  
+    
+        //监听提交
+    form.on('submit', function(data){
+    
+        var loading = layer.msg('购买能量中...', {icon: 16, shade: 0.3, time:0});
+        // return false;
+    });
+    
+ 
+   
+    });
+    
+    
+    
+    
+    
+    //提交
+    $('#element').click(function(){
+    var loadingIndex = layer.load(2, {shade: [0.6,'#000000']});
+  
+         // 进行相应的操作
+  
+     layer.close(loadingIndex);
+    });
+    
+    //监听提交
+    //   form.on('submit()', function (data) {
+    //     var loading = layer.load();
+        
+    //   }
+    
+    
+     obj.addEventListener("change", function() {
+            day = obj.value;
+            updateCost();
+     });
+  
+  
+    // Firefox, Google Chrome, Opera, Safari, Internet Explorer from version 9
+        function OnInput (event) { 
+            // alert(day);
+            day = obj.value;
+            num = event.target.value;
+            
+            updateCost();
+
+        } 
+        
+        function updateCost(){
+            var sun = 75;
+            if(day == 0)
+            {
+                day = 1;
+            }else if(day == 1)
+            {
+                sun = 95;
+            }else if(day == 3)
+            {
+               sun = 51; 
+            }
+            var cost = (num*0.000001*sun*day+0.56).toFixed(4);
+            console.log(sun);
+            key.innerHTML = cost;
+            
+            min.innerHTML = Math.floor(num/64000);
+            max.innerHTML = Math.floor(num/32000);
+            var trx = <?php echo $neee_trx; ?>; 
+            tixing.hidden = 1;
+            if(trx < cost)
+            {
+                tixing.hidden = 0;
+            }
+            
+        }
+	</script>
+	
+	
+	
+	</body>
+	
+
+</html>
