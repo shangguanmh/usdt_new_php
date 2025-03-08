@@ -337,7 +337,8 @@ class Auto extends Controller
 					    	}
 	                     }
 	                     
-	                     if($tixian['huobi']=='USDT' && isset($tixian_Energy)){
+						 //修复读取数据为null时报错问题
+	                     if (isset($tixian['huobi']) && isset($tixian_Energy) && $tixian['huobi']=='USDT'){
 	                         if($tixian_Energy < 64000) {
 	                             echo '能量不足';
 	                             continue 2;
