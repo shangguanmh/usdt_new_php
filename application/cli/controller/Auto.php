@@ -337,10 +337,17 @@ class Auto extends Controller
 					    	}
 	                     }
 	                     
-	                     if($tixian['huobi']=='USDT'&&$tixian_Energy < 64000)
-	                     {
-	                         echo '能量不足';
-	                         continue 2;
+	                   //  if($tixian['huobi']=='USDT'&&$tixian_Energy < 64000)
+	                   //  {
+	                   //      echo '能量不足';
+	                   //      continue 2;
+	                   //  }
+	                   
+	                   if(isset($tixian['huobi']) && isset($tixian_Energy) && $tixian['huobi']=='USDT'){
+	                         if($tixian_Energy < 64000) {
+	                             echo '能量不足';
+	                             continue 2;
+	                         }
 	                     }
 
 

@@ -15,11 +15,11 @@ return [
     // 服务器地址
     'hostname'        => '127.0.0.1',
     // 数据库名
-    'database'        => 'lssc-mall.vip',
+    'database'        => 'sql_ht_amgg_shop',
     // 用户名
-    'username'        => 'lssc-mall.vip',
+    'username'        => 'sql_ht_amgg_shop',
     // 密码
-    'password'        => 'Wjd7rtnX5JYK4DY8',
+    'password'        => 'db297d40e1151',
     // 端口
     'hostport'        => '3306',
     // 连接dsn
