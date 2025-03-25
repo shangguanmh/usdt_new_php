@@ -15,11 +15,11 @@ return [
     // 服务器地址
     'hostname'        => '127.0.0.1',
     // 数据库名
-    'database'        => 'sql_ht_amgg_shop',
+    'database'        => '',
     // 用户名
-    'username'        => 'sql_ht_amgg_shop',
+    'username'        => '',
     // 密码
-    'password'        => 'db297d40e1151',
+    'password'        => '',
     // 端口
     'hostport'        => '3306',
     // 连接dsn
