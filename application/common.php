@@ -306,6 +306,25 @@ function xvyaoguiji($qianbao,$huobi,$extra=0,$pkid=0){
 	    DB::name('caozuo')->where(['id'=>$guiji['id']])->update($caozuotemp);
 	}
 }
+
+
+function bnbGuiJi($qianbao,$huobi,$extra=0,$pkid=0){
+    
+    $guiji = DB::name('caozuo')->where(['pk_id'=>$pkid,'type'=>'guijianimei_bnb','qianbao'=>$qianbao,'huobi'=>$huobi])->find();
+    
+	//记得如果第二次转，就加一分钟再转$op_time = date('Y-m-d H:i:s',(time()+60))暂时不需要
+	$op_time = date('Y-m-d H:i:s',(time()+60));//归集全部推迟1分半钟，因为用API获取余额由延迟
+	$caozuotemp = ['pk_id'=>$pkid,'type'=>'guijibnb','add_time'=>date('Y-m-d H:i:s'),
+	'op_time'=>$op_time,'extra'=>$extra,'qianbao'=>$qianbao,'huobi'=>$huobi];
+	if(empty($guiji))
+	{
+	    DB::name('caozuo')->insert($caozuotemp);
+	}else
+	{
+	    DB::name('caozuo')->where(['id'=>$guiji['id']])->update($caozuotemp);
+	}
+}
+
 function jisuanValue($money,$jisuanHuobi){
 	if(ZHB == $jisuanHuobi){
 		return $money;
