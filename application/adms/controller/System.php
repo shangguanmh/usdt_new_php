@@ -341,24 +341,39 @@ class System extends Base {
     }
     function huilv(){
      	if(request()->isAjax()){//ajax
-	    	$postdata =  $this->request->post();
-	    	$usdt2trx = isset($postdata['usdt2trx'])?$postdata['usdt2trx']:'';
+	    	$postdata 	=  $this->request->post();
+	    	$usdt2trx 	= isset($postdata['usdt2trx'])?$postdata['usdt2trx']:'';
+	    	$usdt2bnb 	= isset($postdata['usdt2bnb'])?$postdata['usdt2bnb']:'';//
 	    	$anquan_pwd = isset($postdata['anquan_pwd'])?$postdata['anquan_pwd']:'';
-	    	if($usdt2trx>25||$usdt2trx<10){
+
+	    	if ($usdt2trx > 25 || $usdt2trx < 10) {
 				htajaxReturn(0,'离谱了');
 	    	}
+
 	    	if(!$this->yanzhenganquanpwd($anquan_pwd)){
 				htajaxReturn(0,'安全密码错误');
 	    	}
+
 	    	Db::name('config')->where(['config_sign'=>'usdt2trx'])->update(['config_value'=>$usdt2trx]);
+	    	Db::name('config')->where(['config_sign'=>'usdt2bnb'])->update(['config_value'=>$usdt2bnb]);
+
 			htajaxReturn(1,'修改成功');
      	}else{
      		$usdt2trx = getConfig('usdt2trx',0);
+     		$usdt2bnb = getConfig('usdt2bnb',0);
+			
 	    	$this->assign('usdt2trx',$usdt2trx);
+	    	$this->assign('usdt2bnb',$usdt2bnb);
+
 	    	return view();
      	}
     }
     function huoquzuixin(){
+    	$autocon = new autocon();
+    	$autocon->getHuilvxin();
+		htajaxReturn(1,'修改成功');
+    }
+    function huoquzuixin2(){
     	$autocon = new autocon();
     	$autocon->getHuilvxin();
 		htajaxReturn(1,'修改成功');

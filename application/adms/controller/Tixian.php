@@ -12,138 +12,158 @@ class Tixian extends Base {
 	    private $addCol = [ ];
     	private $changeCol = [    	];
     
-	    public function settixian(){
-     	if(request()->isAjax()){//ajax
-	    	$postdata =  $this->request->post();
-	    	
-	    	$tixian_day_mianfei = isset($postdata['tixian_day_mianfei'])?$postdata['tixian_day_mianfei']:'';
-	    	$tixian_day_num = isset($postdata['tixian_day_num'])?$postdata['tixian_day_num']:'';
-	    	$tixian_rate = isset($postdata['tixian_rate'])?$postdata['tixian_rate']:'';
-	    	$uplevel_cztx = isset($postdata['uplevel_cztx'])?$postdata['uplevel_cztx']:0;
-	    	$tixian_rate = floatval($tixian_rate);
-	    	$tixian_day_mianfei = intval($tixian_day_mianfei);
-	    	$tixian_day_num = intval($tixian_day_num);
-	    	
-	    	
-	    	$dakuan_trx_address = isset($postdata['dakuan_trx_address'])?$postdata['dakuan_trx_address']:'';
-	    	$dakuan_trx_key = isset($postdata['dakuan_trx_key'])?$postdata['dakuan_trx_key']:'';
-	    	$dakuan_usdt_address = isset($postdata['dakuan_usdt_address'])?$postdata['dakuan_usdt_address']:'';
-	    	$dakuan_usdt_key = isset($postdata['dakuan_usdt_key'])?$postdata['dakuan_usdt_key']:'';
-	    	$auto_zhuanzhang = isset($postdata['auto_zhuanzhang'])?$postdata['auto_zhuanzhang']:'';
-	    	$shoudong_zhuanzhang = isset($postdata['shoudong_zhuanzhang'])?$postdata['shoudong_zhuanzhang']:'';
-	    	$anquan_pwd = isset($postdata['anquan_pwd'])?$postdata['anquan_pwd']:'';
-	    	$zuiditikuan = isset($postdata['zuiditikuan'])?$postdata['zuiditikuan']:'';
-	    	
-	    	$tikuanfangshi = isset($postdata['tikuanfangshi'])?$postdata['tikuanfangshi']:''; //提款方式
-	    	
-	    	$tikuan = explode(',',$tikuanfangshi);
-	    	if(!empty($tikuan))
-	    	{
-	    	    foreach ($tikuan as $v)
-	    	    {
-	    	        if($v != 'TRX' && $v != 'USDT')
-	    	        {
-	    	            htajaxReturn(0,'只支持TRX和USDT');
-	    	        }
-	        	}
-	    	}else
-	    	{
-	    	    htajaxReturn(0,'格式错误,只支持TRX和USDT');
-	    	}
-	    	
-	    	
-	    	if($tixian_day_mianfei<0){
-				htajaxReturn(0,'每日免手续费次数必须大于零');
-	    	}
-	    	if($tixian_day_num<0){
-				htajaxReturn(0,'每日次数必须大于零');
-	    	}
-	    	
-	    	if($tixian_rate<0||$tixian_rate>20){
-				htajaxReturn(0,'提现费率也离谱了吧');
-	    	}
-	    	if($shoudong_zhuanzhang<$auto_zhuanzhang){
-				htajaxReturn(0,'必须手动转账金额必须大于自动转账的金额');
-	    	}
-	    	if(!$this->yanzhenganquanpwd($anquan_pwd)){
-				htajaxReturn(0,'安全密码错误');
-	    	}
-	    	
-    		$dakuan_usdt = getConfig('dakuan_usdt',0);
-     		$dakuan_usdt = json_decode($dakuan_usdt,true);
-     		$dakuan_trx = getConfig('dakuan_trx',0);
-     		$dakuan_trx = json_decode($dakuan_trx,true);
-     		$dakuan_usdt['address'] = $dakuan_usdt_address;
-     		$dakuan_trx['address'] = $dakuan_trx_address;
-	    	if(strpos($dakuan_trx_key,'********') !== false){ 
-			}else{
-				$dakuan_trx['key'] = $dakuan_trx_key;
-			}
-			if(strpos($dakuan_usdt_key,'********') !== false){ 
-			}else{
-				$dakuan_usdt['key'] = $dakuan_usdt_key;
-			}
+	    public function settixian()
+		{
+			if (request()->isAjax()) {//ajax
+				$postdata =  $this->request->post();
+				
+				$tixian_day_mianfei = isset($postdata['tixian_day_mianfei'])?$postdata['tixian_day_mianfei']:'';
+				$tixian_day_num 	= isset($postdata['tixian_day_num'])?$postdata['tixian_day_num']:'';
+				$tixian_rate 		= isset($postdata['tixian_rate'])?$postdata['tixian_rate']:'';
+				$uplevel_cztx 		= isset($postdata['uplevel_cztx'])?$postdata['uplevel_cztx']:0;
+				$tixian_rate 		= floatval($tixian_rate);
+				$tixian_day_mianfei = intval($tixian_day_mianfei);
+				$tixian_day_num 	= intval($tixian_day_num);
+				
+				
+				$dakuan_trx_address 	= isset($postdata['dakuan_trx_address'])?$postdata['dakuan_trx_address']:'';
+				$dakuan_trx_key 		= isset($postdata['dakuan_trx_key'])?$postdata['dakuan_trx_key']:'';
+				$dakuan_usdt_address 	= isset($postdata['dakuan_usdt_address'])?$postdata['dakuan_usdt_address']:'';
+				$dakuan_usdt_key 		= isset($postdata['dakuan_usdt_key'])?$postdata['dakuan_usdt_key']:'';
+				
+				$bnb_address 		= isset($postdata['bnb_address'])?$postdata['bnb_address']:'';
+				$bnb_key 			= isset($postdata['bnb_key'])?$postdata['bnb_key']:'';
+
+				//bep20 - usdt
+				$bep_address 		= isset($postdata['bep_address'])?$postdata['bep_address']:'';
+				$bep_key 			= isset($postdata['bep_key'])?$postdata['bep_key']:'';
+				
+				$auto_zhuanzhang 		= isset($postdata['auto_zhuanzhang'])?$postdata['auto_zhuanzhang']:'';
+				$shoudong_zhuanzhang 	= isset($postdata['shoudong_zhuanzhang'])?$postdata['shoudong_zhuanzhang']:'';
+				$anquan_pwd 			= isset($postdata['anquan_pwd'])?$postdata['anquan_pwd']:'';
+				$zuiditikuan 			= isset($postdata['zuiditikuan'])?$postdata['zuiditikuan']:'';
+				
+				$tikuanfangshi = isset($postdata['tikuanfangshi'])?$postdata['tikuanfangshi']:''; //提款方式
+				
+				$tikuan = explode(',',$tikuanfangshi);
+
+				if (!empty($tikuan)) {
+					foreach ($tikuan as $v) {
+						if($v != 'TRX' && $v != 'USDT' && $v != 'BNB' && $v != 'BEP20USDT') {
+							htajaxReturn(0,'只支持TRX和USDT');
+						}
+					}
+				} else {
+					htajaxReturn(0,'格式错误,只支持TRX和USDT');
+				}
+				
+				
+				if ($tixian_day_mianfei < 0) {
+					htajaxReturn(0,'每日免手续费次数必须大于零');
+				}
+
+				if ($tixian_day_num < 0) {
+					htajaxReturn(0,'每日次数必须大于零');
+				}
+				
+				if ($tixian_rate<0||$tixian_rate>20) {
+					htajaxReturn(0,'提现费率也离谱了吧');
+				}
+				if($shoudong_zhuanzhang<$auto_zhuanzhang){
+					htdajaxReturn(0,'必须手动转账金额必须大于自动转账的金额');
+				}
+
+				if(!$this->yanzhenganquanpwd($anquan_pwd)){
+					htajaxReturn(0,'安全密码错误');
+				}
+				
+				$dakuan_usdt = getConfig('dakuan_usdt',0);
+				$dakuan_usdt = json_decode($dakuan_usdt,true);
+
+				$dakuan_trx  = getConfig('dakuan_trx',0);
+				$dakuan_trx  = json_decode($dakuan_trx,true);
+
+				$bnb_address = getConfig('bnb_address',0);
+				$bnb_key = getConfig('bnb_key',0);	
+
+				$bep_address = getConfig('bep_address',0);
+				$bep_key = getConfig('bep_key',0);	
+
+				$dakuan_usdt['address'] = $dakuan_usdt_address;
+				$dakuan_trx['address']  = $dakuan_trx_address;
+
+				if (strpos($dakuan_trx_key,'********') !== false){ 
+				} else {
+					$dakuan_trx['key'] = $dakuan_trx_key;
+				}
+
+				if (strpos($dakuan_usdt_key,'********') !== false) { 
+				} else {
+					$dakuan_usdt['key'] = $dakuan_usdt_key;
+				}
+				
+				Db::name('config')->where(['config_sign'=>'tikuanfangshi'])->update(['config_value'=>json_encode($tikuan)]);
+				Db::name('config')->where(['config_sign'=>'tixian_rate'])->update(['config_value'=>$tixian_rate]);
+				Db::name('config')->where(['config_sign'=>'tixian_day_mianfei'])->update(['config_value'=>$tixian_day_mianfei]);
+				Db::name('config')->where(['config_sign'=>'tixian_day_num'])->update(['config_value'=>$tixian_day_num]);
+				Db::name('config')->where(['config_sign'=>'dakuan_trx'])->update(['config_value'=>json_encode($dakuan_trx)]);
+				Db::name('config')->where(['config_sign'=>'dakuan_usdt'])->update(['config_value'=>json_encode($dakuan_usdt)]);
+				Db::name('config')->where(['config_sign'=>'auto_zhuanzhang'])->update(['config_value'=>$auto_zhuanzhang]);
+				Db::name('config')->where(['config_sign'=>'zuiditikuan'])->update(['config_value'=>$zuiditikuan]);
+				Db::name('config')->where(['config_sign'=>'shoudong_zhuanzhang'])->update(['config_value'=>$shoudong_zhuanzhang]);
+				Db::name('config')->where(['config_sign'=>'uplevel_cztx'])->update(['config_value'=>$uplevel_cztx]);
+				
+				
+				htajaxReturn(1,'修改成功');
 			
-			Db::name('config')->where(['config_sign'=>'tikuanfangshi'])->update(['config_value'=>json_encode($tikuan)]);
-	    	Db::name('config')->where(['config_sign'=>'tixian_rate'])->update(['config_value'=>$tixian_rate]);
-	    	Db::name('config')->where(['config_sign'=>'tixian_day_mianfei'])->update(['config_value'=>$tixian_day_mianfei]);
-	    	Db::name('config')->where(['config_sign'=>'tixian_day_num'])->update(['config_value'=>$tixian_day_num]);
-	    	Db::name('config')->where(['config_sign'=>'dakuan_trx'])->update(['config_value'=>json_encode($dakuan_trx)]);
-	    	Db::name('config')->where(['config_sign'=>'dakuan_usdt'])->update(['config_value'=>json_encode($dakuan_usdt)]);
-	    	Db::name('config')->where(['config_sign'=>'auto_zhuanzhang'])->update(['config_value'=>$auto_zhuanzhang]);
-	    	Db::name('config')->where(['config_sign'=>'zuiditikuan'])->update(['config_value'=>$zuiditikuan]);
-	    	Db::name('config')->where(['config_sign'=>'shoudong_zhuanzhang'])->update(['config_value'=>$shoudong_zhuanzhang]);
-	    	Db::name('config')->where(['config_sign'=>'uplevel_cztx'])->update(['config_value'=>$uplevel_cztx]);
-			htajaxReturn(1,'修改成功');
-     	}else{
-     	    
-     		$tixian_rate = getConfig('tixian_rate',0);
-     		$tixian_day_num = getConfig('tixian_day_num',0);
-     		$tixian_day_mianfei = getConfig('tixian_day_mianfei',0);
-     		$uplevel_cztx = getConfig('uplevel_cztx',0);
-     		$dakuan_usdt = getConfig('dakuan_usdt',0);
-     		$dakuan_usdt = json_decode($dakuan_usdt,true);
-     		$dakuan_trx = getConfig('dakuan_trx',0);
-     		$dakuan_trx = json_decode($dakuan_trx,true);
-     		if(strlen($dakuan_usdt['key'])>1){
-     			$dakuan_usdt['key'] = $dakuan_usdt['key'][0].'**********'.$dakuan_usdt['key'][(strlen($dakuan_usdt['key'])-1)];
-     		}
-     		if(strlen($dakuan_trx['key'])>1){
-     			$dakuan_trx['key'] = $dakuan_trx['key'][0].'**********'.$dakuan_trx['key'][(strlen($dakuan_trx['key'])-1)];
-     		}
-     		$auto_zhuanzhang = getConfig('auto_zhuanzhang',0);
-     		$shoudong_zhuanzhang = getConfig('shoudong_zhuanzhang',0);
-     		$zuiditikuan = getConfig('zuiditikuan',0);
-     		
-     		$tikuanfangshi = getConfig('tikuanfangshi',0);
-     		$tikuanfangshi = json_decode($tikuanfangshi,true);
-     		$tikuan = '';
-     		foreach ($tikuanfangshi as $k=>$v)
-     		{
-     		    if($k)
-     		    {
-     		        $tikuan .=',';
-     		    }
-     		    $tikuan .=$v;
-     		    
-     		}
-    //  		echo($tikuan);
-     	  //  var_dump($tikuanfangshi[0]);
-     	    
-     	    $this->assign('tikuanfangshi',$tikuan);
-     	    $this->assign('uplevel_cztx',$uplevel_cztx);
-	    	$this->assign('zuiditikuan',$zuiditikuan);
-	    	$this->assign('shoudong_zhuanzhang',$shoudong_zhuanzhang);
-	    	$this->assign('auto_zhuanzhang',$auto_zhuanzhang);
-	    	$this->assign('tixian_day_mianfei',$tixian_day_mianfei);
-	    	$this->assign('tixian_day_num',$tixian_day_num);
-	    	$this->assign('tixian_rate',$tixian_rate);
-	    	$this->assign('dakuan_usdt',$dakuan_usdt);
-	    	$this->assign('dakuan_trx',$dakuan_trx);
-	    	return view();
-     	}
-    
-    }
+			}else{
+				
+				$tixian_rate = getConfig('tixian_rate',0);
+				$tixian_day_num = getConfig('tixian_day_num',0);
+				$tixian_day_mianfei = getConfig('tixian_day_mianfei',0);
+				$uplevel_cztx = getConfig('uplevel_cztx',0);
+				$dakuan_usdt = getConfig('dakuan_usdt',0);
+				$dakuan_usdt = json_decode($dakuan_usdt,true);
+				$dakuan_trx = getConfig('dakuan_trx',0);
+				$dakuan_trx = json_decode($dakuan_trx,true);
+				if(strlen($dakuan_usdt['key'])>1){
+					$dakuan_usdt['key'] = $dakuan_usdt['key'][0].'**********'.$dakuan_usdt['key'][(strlen($dakuan_usdt['key'])-1)];
+				}
+				if(strlen($dakuan_trx['key'])>1){
+					$dakuan_trx['key'] = $dakuan_trx['key'][0].'**********'.$dakuan_trx['key'][(strlen($dakuan_trx['key'])-1)];
+				}
+				$auto_zhuanzhang = getConfig('auto_zhuanzhang',0);
+				$shoudong_zhuanzhang = getConfig('shoudong_zhuanzhang',0);
+				$zuiditikuan = getConfig('zuiditikuan',0);
+				
+				$tikuanfangshi = getConfig('tikuanfangshi',0);
+				$tikuanfangshi = json_decode($tikuanfangshi,true);
+				$tikuan = '';
+				foreach ($tikuanfangshi as $k=>$v)
+				{
+					if($k)
+					{
+						$tikuan .=',';
+					}
+					$tikuan .=$v;
+					
+				}
+		//  		echo($tikuan);
+			//  var_dump($tikuanfangshi[0]);
+				
+				$this->assign('tikuanfangshi',$tikuan);
+				$this->assign('uplevel_cztx',$uplevel_cztx);
+				$this->assign('zuiditikuan',$zuiditikuan);
+				$this->assign('shoudong_zhuanzhang',$shoudong_zhuanzhang);
+				$this->assign('auto_zhuanzhang',$auto_zhuanzhang);
+				$this->assign('tixian_day_mianfei',$tixian_day_mianfei);
+				$this->assign('tixian_day_num',$tixian_day_num);
+				$this->assign('tixian_rate',$tixian_rate);
+				$this->assign('dakuan_usdt',$dakuan_usdt);
+				$this->assign('dakuan_trx',$dakuan_trx);
+				return view();
+			}
+    	}
      public function setaddress(){
          
     	
@@ -157,21 +177,27 @@ class Tixian extends Base {
     	}
 	    	$postdata =  $this->request->post();
 	    	$guijizhanghu = isset($postdata['guijizhanghu'])?$postdata['guijizhanghu']:'';
+			$collect_addr = isset($postdata['collect_addr'])?$postdata['collect_addr']:'';
+
+
 	    	$guiji_usdt_min = isset($postdata['guiji_usdt_min'])?$postdata['guiji_usdt_min']:'';
 	    	$anquan_pwd = isset($postdata['anquan_pwd'])?$postdata['anquan_pwd']:'';
 	    	if($guiji_usdt_min<=0||$guiji_usdt_min>100){
 				htajaxReturn(0,'usdt归集界限有误');
 	    	}
 	    	Db::name('config')->where(['config_sign'=>'guijizhanghu'])->update(['config_value'=>$guijizhanghu]);
+	    	Db::name('config')->where(['config_sign'=>'collect_addr'])->update(['config_value'=>$collect_addr]);
 	    	Db::name('config')->where(['config_sign'=>'guiji_usdt_min'])->update(['config_value'=>$guiji_usdt_min]);
 	    	if(!$this->yanzhenganquanpwd($anquan_pwd)){
 				htajaxReturn(0,'安全密码错误');
 	    	}
 			htajaxReturn(1,'修改成功');
      	}else{
+     		$collect_addr = getConfig('collect_addr',0);
      		$guijizhanghu = getConfig('guijizhanghu',0);
      		$guiji_usdt_min = getConfig('guiji_usdt_min',0);
 	    	$this->assign('guijizhanghu',$guijizhanghu);
+			$this->assign('collect_addr',$collect_addr);
 	    	$this->assign('guiji_usdt_min',$guiji_usdt_min);
 	    	return view();
      	}

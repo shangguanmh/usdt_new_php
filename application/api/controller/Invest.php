@@ -30,6 +30,111 @@ class Invest extends Base {
 	   $data = ['qianbao'=>$address,'huilv'=>$huilv,'huobi'=>$huobi];
        ajaxReturn(1, '成功',['text'=>$col,'data'=>$data]);
  	}
+
+    public function invertbnbInfo() 
+	{
+		$address = '';
+
+   	   	$qianbao = Db::name('bnb_address')->where([
+			'user_id' => $this->userInfo['id']
+		])->value('address');
+   	   	
+		if (empty($qianbao)) {
+   	   		$noUserAddress = Db::name('bnb_address')->where(['user_id'=>0])->order('id asc')->find();
+
+   	   		if ( ! empty($noUserAddress)){
+   	 		    $address = $noUserAddress['address'];
+   	 		    Db::name('bnb_address')->where([
+					'id' => $noUserAddress['id']
+				])->update(['user_id'=>$this->userInfo['id']]);
+   	   		}
+   	   } else {
+   	   		$address = $qianbao;
+   	   }
+
+	   $huilv  = getConfig('usdt2bnb',0);
+	   $ziduan = ['col_地址','col_充值账户','col_基础账户','col_理财账户','col_充值地址','col_复制地址','col_你的钱包','col_输入钱包地址',
+	   'col_充值金额','col_输入金额','text_充值提示1','text_充值提示2','text_充值提示3','text_充值提示6','text_充值提示5','col_充值完成'];
+	   
+	   $col         = getcol($ziduan);
+	   $zduidiwenzi = getConfig('zuiditikuan_text',0);
+	   $zduidiwenzi = empty($zduidiwenzi) ? 2 : $zduidiwenzi;
+
+	   $col['text_充值提示6'] = lang('text_充值提示6',[$zduidiwenzi,ZHB,$zduidiwenzi,ZHB]);
+	   $col['text_充值提示5'] = lang('text_充值提示5',[ZHB]);
+
+	   $huobi = ['USDT','BNB'];
+	   $data  = ['qianbao'=>$address,'huilv'=>$huilv,'huobi'=>$huobi];
+
+       ajaxReturn(1, '成功',['text'=>$col,'data'=>$data]);
+	}
+
+	public function postinvestBnb()
+	{
+		$postdata   = request() -> post();
+        $to_address = isset($postdata["to_address"]) ? $postdata["to_address"] : '';
+        $huobi      = isset($postdata["huobi"]) ? $postdata["huobi"] : '';
+
+        $to_balance = isset($postdata["to_balance"]) ? $postdata["to_balance"] : 1;
+
+		if (empty($to_address)) {
+       		ajaxReturn(0, 'col_提款地址不正确');
+		}
+
+		if (!in_array($to_balance, [1,2])) {
+			feifaReturn(5);
+		}
+
+		$order_num = 'IN'.getOrderNo();
+     	$lock_key  = getRedisXM('chongzhi:bnb'.$this->userInfo['id']);
+
+    	$is_lock   = redisCache()->setnx($lock_key, 2);
+
+    	if ($is_lock) {
+			redisCache()->expire($lock_key, 1);
+		} else {
+			// 防止死锁
+			if (redisCache()->ttl($lock_key) == -1) {
+				redisCache()->expire($lock_key, 2);
+			}
+
+			ajaxReturn(0,'ajax_服务器缓缓');
+		}
+
+		$haveExit = Db::name('invest_order')->where([
+			'user_id' => $this->userInfo['id'],
+			'status'  => 1
+		])->find();
+		
+		if (empty($haveExit)) {
+			$insertdata = [
+				'to_address' => $to_address,
+				'order_num'  => $order_num,
+				'user_id'    => $this->userInfo['id'],
+				'to_balance' => $to_balance,
+				'add_time'   => date('Y-m-d H:i:s')
+			];
+			
+			Db::name('invest_order')->insert($insertdata);
+
+			$pkid   = Db::name('invest_order')->getLastInsID();
+
+			$caozuo = [
+				'pk_id'=>$pkid,
+				'type'=>'chongzhi',
+				'add_time'=>date('Y-m-d H:i:s'),
+				'op_time'=>date('Y-m-d H:i:s'),
+				'extra'=>json_encode([])
+			];
+
+			DB::name('caozuo')->insert($caozuo);
+		}
+
+		redisCache()->del($lock_key);
+        ajaxReturn(1, 'text_充值提示4');
+	}
+
+
 	public function postinvest(){
 		$postdata = request() -> post();
         $to_address = isset($postdata["to_address"]) ? $postdata["to_address"] : '';
@@ -39,25 +144,10 @@ class Invest extends Base {
 		if(empty($to_address)){
        		ajaxReturn(0, 'col_提款地址不正确');
 		}
-//		if(empty($from_address)){
-//			feifaReturn(2);
-//		}
-//		if(!in_array($huobi,['USDT','TRX'])){
-//			feifaReturn(3);
-//		}
-//		if($money<=0){
-//     		ajaxReturn(0, 'col_金额非法');
-//		}
 		if(!in_array($to_balance, [1,2])){
 			feifaReturn(5);
 		}
 		$order_num = 'IN'.getOrderNo();
-//	  	$huilv = getConfig('usdt2trx',0);
-//		$zuihou_value = $money;
-//		if($huobi =='TRX'){
-//			$zuihou_value = bcdiv($money,$huilv,6);
-//		}
-		      //防止多次连续操作
      	$lock_key = getRedisXM('chongzhi'.$this->userInfo['id']);
     	$is_lock = redisCache()->setnx($lock_key, 2); 
     	if($is_lock){
@@ -81,6 +171,7 @@ class Invest extends Base {
 		redisCache()->del($lock_key);
         ajaxReturn(1, 'text_充值提示4');
 	}
+
 	public function drawInfo(){
    	   $qianbao = 'TRNRn8ifEFWQWpp2SFQGRyzJcSMuz8zYyw';
 	   $ziduan = ['col_佣金账户','col_24小时提款','col_可提款','col_提款手续费','col_使用次数','col_手续费','col_限额','col_torn地址','col_安全密码','col_次','col_出款方式'];

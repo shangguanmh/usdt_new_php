@@ -26,6 +26,15 @@
     </div>
   <a class="layui-btn"  id="huoquzuixin" >点击自动获取最新价格</a><font id="huoquzhongtext" style="display: none;">获取中。。</font>
   </div>
+  <div class="layui-form-item">
+  <div class="layui-inline">
+    <label class="layui-form-label">usdt兑bnb汇率</label>
+    <div class="layui-input-inline" style="width: 500px;">
+      <input name="usdt2bnb"  lay-verify="required" class="layui-input"   value="{$usdt2bnb}">
+    </div>
+  </div>
+<a class="layui-btn"  id="huoquzuixin2" >点击自动获取最新价格</a><font id="huoquzhongtext2" style="display: none;">获取中。。</font>
+</div>
      <div class="layui-form-item">
     <div class="layui-inline">
       <label class="layui-form-label" style="">验证安全密码</label>
@@ -73,6 +82,27 @@ layui.use(['form','layer'], function(){
         	type:"post",
         	data:{},
         	url:"{:url('System/huoquzuixin')}",
+        	async:true,
+        	dataType:'json',
+        	success:function(res){
+		        if(res.code == 1){
+	            layer.msg('获取成功',{time:1800},function(){
+	            	window.location.reload();
+	            });
+		        }else{
+		            layer.msg(res.msg,{time:1800,icon: 5});
+		        }
+		    }
+    	});
+  });
+
+  $('#huoquzuixin2').on('click',function(){
+  			$("#huoquzuixin2").hide();
+  			$("#huoquzhongtext2").show();
+  			$.ajax({
+        	type:"post",
+        	data:{},
+        	url:"{:url('System/huoquzuixin2')}",
         	async:true,
         	dataType:'json',
         	success:function(res){

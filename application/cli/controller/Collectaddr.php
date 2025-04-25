@@ -330,7 +330,6 @@ class Collectaddr extends Controller
         echo "BNB余额:" . $bnbBalance . "\n";
         
         if ($tokenType == 'BNB') {
-            echo "BNB不提取\n";
             $this->processBnbCollection($address, $bnbBalance, $task);
         } else if ($tokenType == 'USDT_BEP20') {
             $this->processUsdtCollection($address, $bnbBalance, $task);
@@ -346,7 +345,7 @@ class Collectaddr extends Controller
     private function processBnbCollection($address, $bnbBalance, $task)
     {
         // 归集BNB
-        if ($bnbBalance > $this->bnbReserveAmount && $bnbBalance > 0.02) { // 留0.01 BNB作为手续费
+        if ($bnbBalance > $this->bnbReserveAmount && $bnbBalance > 0.00001) { // 留0.01 BNB作为手续费
             $collectionAddress = $this->collectionAddress;
             $transferAmount    = bcsub($bnbBalance, $this->bnbReserveAmount, 8);
             echo '转账' . $transferAmount . 'BNB' . "\n";
@@ -370,7 +369,7 @@ class Collectaddr extends Controller
         $usdtBalance = $this->getTokenBalance($address, $this->usdtContractAddress);
         echo "USDT余额:" . $usdtBalance . "\n";
         
-        $minBnb = 0.003; // 最低需要的BNB手续费
+        $minBnb = 0.00001; // 最低需要的BNB手续费
         
         if ($bnbBalance >= $minBnb && $usdtBalance > $this->minUsdtAmount) {
             $collectionAddress = $this->collectionAddress;
