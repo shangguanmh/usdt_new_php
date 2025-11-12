@@ -168,8 +168,12 @@
 						<td style="margin-left: 10px;"><font style="font-size: 25px;"  id="trxyue">2121</font><font></font></td>
 					</tr>
 					<tr>
-						<td style="text-align: right;">未分配钱包地址数量：</td>
+						<td style="text-align: right;">TRX未分配钱包地址数量：</td>
 						<td style="margin-left: 10px;"><font style="font-size: 25px;"  id="weifenpei">2121</font><font>个</font></td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">BNB未分配钱包地址数量：</td>
+						<td style="margin-left: 10px;"><font style="font-size: 25px;"  id="unUsedBnbAddr">0</font><font>个</font></td>
 					</tr>
 				</table>
 			</div>
@@ -213,6 +217,7 @@
 	        		if(data.code == 1){
 	        			$("#jingshidiv").show();
 	        			var weifenpei = data.data.weifenpei;
+						var unUsedBnbAddr = data.data.unUsedBnbAddr;
 	        			var usdtyue = data.data.usdtyue;
 	        			var trxyue = data.data.trxyue;
 	        			var jifen = data.data.jifen;
@@ -224,8 +229,13 @@
 	        				jifen+="<font style='color:red;'>（积分小于100，积分不足会导致系统不归集，请前往积分信息-自助充值积分）</font>";
 	        			}
 	        			if(weifenpei<20){
-	        				weifenpei+="<font style='color:red;'>（充值钱包地址不足20个，请联系技术增加钱包）</font>";
+	        				weifenpei+="<font style='color:red;'>（TRX充值钱包地址不足20个，请联系技术增加钱包）</font>";
 	        			}
+						console.log(unUsedBnbAddr)
+						if(unUsedBnbAddr<20){
+							unUsedBnbAddr ="<font style='color:red;'>（BNB充值钱包地址不足20个，请联系技术增加钱包）</font>";
+						}
+
 	        			if(trxyue<500){
 	        				trxyue+="TRX"+"<font style='color:red;'>（转账TRX钱包不足500，请检查）</font>";
 	        			}
@@ -245,6 +255,8 @@
 	        			$("#usdtyue").html(usdtyue);
 	        			$("#trxyue").html(trxyue);
 	        			$("#jifen").html(jifen);
+
+						$('#unUsedBnbAddr').html(unUsedBnbAddr);
 	        		}
 	        	}
 		    });

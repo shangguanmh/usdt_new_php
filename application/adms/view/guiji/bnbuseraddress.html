@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>BNB用户地址</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/mystyle.css" />
+  <link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/layui/css/layui.css"  media="all">
+  <style>
+  	.dizhi{
+  		cursor: pointer;
+  		color: blue;
+  	}
+  </style>
+</head>
+<body>            
+  
+<div class="my-btn-box" >
+	<form class="layui-form" action="{$action}" method="get" id="sousuoForm">
+				<input type="hidden" id="page" name="page" value="{$pageInfo['page']}" />
+				{$searchCol}				
+				<button class="layui-btn mgl-30" style="margin-left: 30px;">查询</button>
+				<a class="layui-btn btn-add btn-default" style="float: right;" id="bnbcollectAll">一键归集所有BNB地址</a>
+	</form>
+</div>
+<div class="layui-form">
+	<table class="layui-table"> 
+		<thead>
+			{$showCol.head}
+		</thead>
+		<tbody>
+			{$showCol.neirong}
+		</tbody>
+	</table>
+</div>
+<div id="pagediv"></div>
+<span>共{$pageInfo.count}条数据</span>
+
+<script src="__PUBLIC__/static/Cs/frame/layui/layui.js" charset="utf-8"></script>
+<script>
+layui.use(['form','layer','laypage','upload'], function(){
+	var $ = layui.jquery,form = layui.form(),laypage = layui.laypage,layer = layui.layer;
+  
+  // 分页
+	laypage({
+		cont: 'pagediv',
+		curr: {$pageInfo['page']},
+		pages: {$pageInfo['page_count']}, //总页数
+		groups: 5, //连续显示分页数
+		jump: function(obj, first){
+	    	var page = obj.curr;
+	    	if (!first) {
+	    		$("#page").val(page);
+	    		$("#sousuoForm").submit();
+	    	}
+	    }
+	});
+	
+	// 一键归集所有BNB地址
+	$('#bnbcollectAll').on('click', function(){
+		layer.confirm('确定要归集所有BNB地址吗？', {
+			btn: ['确定','取消']
+		}, function(index) {
+			layer.close(index);
+			$.ajax({
+				type: "post",
+				url: "{:url('Guiji/bnbcollectAll')}",
+				async: true,
+				dataType: 'json',
+				success: function(res){
+					if(res.code == 1){
+						layer.msg(res.msg, {}, function(){
+							window.location.reload();
+						});
+					} else {
+						layer.msg(res.msg, {time: 1800, icon: 5});
+					}
+				}
+			});
+		});
+	});
+	
+	// 查看记录按钮点击事件
+	$(document).on('click', '.logoset', function(){
+		var address = $(this).attr('address');
+		layer.open({
+			type: 2,
+			title: '充值记录',
+			shadeClose: true,
+			shade: 0.8,
+			area: ['90%', '90%'],
+			content: "{:url('Invest/main')}?from_address=" + address
+		});
+	});
+});
+</script>
+</body>
+</html> 

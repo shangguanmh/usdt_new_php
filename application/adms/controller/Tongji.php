@@ -117,43 +117,43 @@ class Tongji extends Base {
     	];
 		htajaxReturn(1,'成功',$data);
 	}
-	function jingshi(){
-		$weifenpei = Db::name('addressdizhi')->where(['user_id'=>0])->count();
-		$dakuan_usdt = getConfig('dakuan_usdt',0);
- 		$dakuan_usdt = json_decode($dakuan_usdt,true);
- 		$dakuan_trx = getConfig('dakuan_trx',0);
- 		$dakuan_trx = json_decode($dakuan_trx,true);
+	function jingshi()
+    {
+		$weifenpei      = Db::name('addressdizhi')->where(['user_id'=>0])->count();
+
+        $unUsedBnbAddr  = Db::name('bnb_address')->where(['user_id'=>0])->count();
+
+		$dakuan_usdt    = getConfig('dakuan_usdt',0);
+ 		$dakuan_usdt    = json_decode($dakuan_usdt,true);
+ 		$dakuan_trx     = getConfig('dakuan_trx',0);
+ 		$dakuan_trx     = json_decode($dakuan_trx,true);
  		
  		$config = Db::name('nconfig')->find();
 	                     
 	    $tixian_Energy = $config['tixian_energy'];
 	                     
  		//查TRX余额
- 		$addresstrx = $dakuan_trx['address'];
+ 		$addresstrx  = $dakuan_trx['address'];
  		$addressusdt = $dakuan_usdt['address'];
  		$domain = 'https://apilist.tronscanapi.com';
 
-		$urltrx = "$domain/api/account/tokens?address=$addresstrx&start=0&limit=20&token=trx&hidden=0&show=0&sortType=0";
-		$urlusdt = "$domain/api/account/tokens?address=$addressusdt&start=0&limit=20&token=USDT&hidden=0&show=0&sortType=0";
- 		$autocon = new autocon();
- 		$nengliang = $autocon->getEnergy($addressusdt);
- 		if($nengliang)
- 		{
+		$urltrx     = "$domain/api/account/tokens?address=$addresstrx&start=0&limit=20&token=trx&hidden=0&show=0&sortType=0";
+		$urlusdt    = "$domain/api/account/tokens?address=$addressusdt&start=0&limit=20&token=USDT&hidden=0&show=0&sortType=0";
+ 		$autocon    = new autocon();
+ 		$nengliang  = $autocon->getEnergy($addressusdt);
+
+ 		if($nengliang) {
  		    $tixian_Energy = $nengliang;
  		}
- 		
-//  		$autocon->updateConfig();
-//     	$re_trx = $autocon->http_get($urltrx);
-//     	$re_usdt = $autocon->http_get($urlusdt);
 
-        $re_trx = http_get($urltrx);
+        $re_trx  = http_get($urltrx);
     	$re_usdt = http_get($urlusdt);
     	
     	$re_usdt = json_decode($re_usdt,true);
     	
     // 	var_dump($re_usdt);
-    	$re_trx = json_decode($re_trx,true);
-		$trxyue = isset($re_trx['data'][0]['amount'])?$re_trx['data'][0]['amount']:0;
+    	$re_trx  = json_decode($re_trx,true);
+		$trxyue  = isset($re_trx['data'][0]['amount'])?$re_trx['data'][0]['amount']:0;
 		$usdtyue = isset($re_usdt['data'][0]['quantity'])?$re_usdt['data'][0]['quantity']:0;
 		
 		if($trxyue >0 || $usdtyue >0)
@@ -175,16 +175,23 @@ class Tongji extends Base {
 		}
 		
 		
-		if(!$trxyue)
-		{
+		if (!$trxyue) {
 		    $trxyue = $config['tixian_trx'];
 		}
-		if(!$usdtyue)
-		{
+
+		if (!$usdtyue) {
 		    $usdtyue = $config['tixian_usdt'];
 		}
+
     	$jifen = Db::name('sys_jifen')->find(1);
-		htajaxReturn(1,'成功',['weifenpei'=>$weifenpei,'usdtyue'=>$usdtyue,'trxyue'=>$trxyue,'jifen'=>$jifen['jifen'],'energy'=>$tixian_Energy]);
+		htajaxReturn(1,'成功',[
+            'weifenpei'      => $weifenpei,
+            'unUsedBnbAddr'  => $unUsedBnbAddr,
+            'usdtyue'        => $usdtyue,
+            'trxyue'         => $trxyue,
+            'jifen'          => $jifen['jifen'],
+            'energy'         => $tixian_Energy
+        ]);
 	}
 	 public function meiri(){
    	 	$page = isset($this->params['page'])?$this->params['page']:1;

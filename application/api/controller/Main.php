@@ -1,57 +1,62 @@
 <?php
-namespace app\ api\ controller;
+namespace app\api\controller;
 use think\ Cache;
 use think\ Db;
 use think\ Request;
 use think\ Controller;
 use think\ Lang;
-class Main extends BaseNologin {
+class Main extends BaseNologin
+{
     protected $userInfo;
-    public function LanguageList() {
-  		$langlist = json_decode(getConfig('langlist',0),true);
-  		$token = Request::instance()->header('token');
+    public function LanguageList()
+    {
+  		$langlist   = json_decode(getConfig('langlist',0),true);
+  		$token      = Request::instance()->header('token');
   		$defaultlLang = '';
+
     	if(!empty($token)){
     		$defaultlLang = Db::name('user')-> where(['token'=>$token])->value('lang');
     	}
+
   		if(empty($defaultlLang)){
-		//根据IP获得..
-  		$ipInfo = $this->http_get();	
-  		$ipInfo = json_decode($ipInfo,true);
-  		if(isset($ipInfo['countryCode'])){
-  			if(in_array($ipInfo['countryCode'],['SA','YE','OM','KW','BH','QA','IQ','SY','JO','LB','PS','EG','SD','LY',
-  			'TN','MR','DZ','KM','DJ','SO','MA'])){//阿拉伯语
-  				$defaultlLang = 'ar';
-  			}elseif(in_array($ipInfo['countryCode'],['TW','HK','MO','CN'])){//港澳台
-  				$defaultlLang = 'cht';
-  			}elseif(in_array($ipInfo['countryCode'],['DE','AT','LI','CH','LU','BE'])){//德语
-  				$defaultlLang = 'de';
-  			}elseif(in_array($ipInfo['countryCode'],['ES','AR','BO','CL','CO','CR','CU','DM','EC','SV','GQ','GT','HN'
-  			,'MX','NI','PA','PY','PE','UY','VE'])){//西班牙语
-  				$defaultlLang = 'es';
-  			}elseif(in_array($ipInfo['countryCode'],['CG','MG','CM','CI','NE','SN','ML','RW','HT','TD','GN','BI','BJ','TG',
-  			'CF','KM'])){//法语
-  				$defaultlLang = 'fr';
-  			}elseif(in_array($ipInfo['countryCode'],['ID'])){//印尼
-  				$defaultlLang = 'id';
-  			}elseif(in_array($ipInfo['countryCode'],['IT','SM','VA'])){//意大利语
-  				$defaultlLang = 'it';
-  			}elseif(in_array($ipInfo['countryCode'],['JP'])){//日语
-  				$defaultlLang = 'jp';
-  			}elseif(in_array($ipInfo['countryCode'],['KR'])){//韩语
-  				$defaultlLang = 'kor';
-  			}elseif(in_array($ipInfo['countryCode'],['BR','MZ','AO','PT','GW','TL','GQ','CV'])){//葡萄牙
-  				$defaultlLang = 'pt';
-  			}elseif(in_array($ipInfo['countryCode'],['RU','KZ','BY','KG','TJ'])){//俄语
-  				$defaultlLang = 'ru';
-  			}elseif(in_array($ipInfo['countryCode'],['TR','CY','BG','AZ','RO'])){//俄语
-  				$defaultlLang = 'tr';
-  			}else{
-      				$defaultlLang = 'en';
-  			}
-  		}else{//获取错误
-  			$defaultlLang = 'en';
-  		}
+            //根据IP获得..
+            $ipInfo = $this->http_get();
+            $ipInfo = json_decode($ipInfo,true);
+
+            if (isset($ipInfo['countryCode'])) {
+                if(in_array($ipInfo['countryCode'],['SA','YE','OM','KW','BH','QA','IQ','SY','JO','LB','PS','EG','SD','LY',
+                'TN','MR','DZ','KM','DJ','SO','MA'])){//阿拉伯语
+                    $defaultlLang = 'ar';
+                }elseif(in_array($ipInfo['countryCode'],['TW','HK','MO','CN'])){//港澳台
+                    $defaultlLang = 'cht';
+                }elseif(in_array($ipInfo['countryCode'],['DE','AT','LI','CH','LU','BE'])){//德语
+                    $defaultlLang = 'de';
+                }elseif(in_array($ipInfo['countryCode'],['ES','AR','BO','CL','CO','CR','CU','DM','EC','SV','GQ','GT','HN'
+                ,'MX','NI','PA','PY','PE','UY','VE'])){//西班牙语
+                    $defaultlLang = 'es';
+                }elseif(in_array($ipInfo['countryCode'],['CG','MG','CM','CI','NE','SN','ML','RW','HT','TD','GN','BI','BJ','TG',
+                'CF','KM'])){//法语
+                    $defaultlLang = 'fr';
+                }elseif(in_array($ipInfo['countryCode'],['ID'])){//印尼
+                    $defaultlLang = 'id';
+                }elseif(in_array($ipInfo['countryCode'],['IT','SM','VA'])){//意大利语
+                    $defaultlLang = 'it';
+                }elseif(in_array($ipInfo['countryCode'],['JP'])){//日语
+                    $defaultlLang = 'jp';
+                }elseif(in_array($ipInfo['countryCode'],['KR'])){//韩语
+                    $defaultlLang = 'kor';
+                }elseif(in_array($ipInfo['countryCode'],['BR','MZ','AO','PT','GW','TL','GQ','CV'])){//葡萄牙
+                    $defaultlLang = 'pt';
+                }elseif(in_array($ipInfo['countryCode'],['RU','KZ','BY','KG','TJ'])){//俄语
+                    $defaultlLang = 'ru';
+                }elseif(in_array($ipInfo['countryCode'],['TR','CY','BG','AZ','RO'])){//俄语
+                    $defaultlLang = 'tr';
+                }else{
+                        $defaultlLang = 'en';
+                }
+            }else{//获取错误
+                $defaultlLang = 'en';
+            }
   		}
   		$resu = [];
 		foreach($langlist as $val){
@@ -65,7 +70,8 @@ class Main extends BaseNologin {
   		
         ajaxReturn(1, '成功', ['langlist'=>$langlist,'default'=>$resu]);
     }
-    	function http_get()
+
+    function http_get()
 	{
 		$ip = get_client_ip();
 //		$ip = '212.26.11.255';
@@ -84,6 +90,7 @@ class Main extends BaseNologin {
 	    curl_close($curl);
 	    return $tmpInfo;   
 	}
+
     function MenuText() {
         $menu = [
         	'ZHB'=>ZHB,

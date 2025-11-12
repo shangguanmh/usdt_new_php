@@ -9,7 +9,7 @@ use Exception;
 class Checkbnbaddr extends Controller
 {
     private $apiKey                 = 'ZAD7KIVUQUCBKCN9RFW4DBHGBCU6SUAM3Z'; // BscScan API 密钥
-    private $usdtContractAddress    = '0x55d398326f99059ff775485246999027b3197955'; // USDT BEP20 合约地址
+    private $usdtContractAddress    = '0xd4b6f4c9af70c3287979228c34ec9c880847f608'; // USDT BEP20 合约地址
     private $lockExpireTime         = 180; // 锁过期时间（秒）
     private $minBnbAmount           = 0.001; // 最小BNB充值金额
     private $minUsdtAmount          = 0.1; // 最小USDT充值金额
@@ -133,7 +133,7 @@ class Checkbnbaddr extends Controller
                 Db::name('caozuo')->where(['id' => $val['id']])->delete();
 
                 Db::name('text')->insert([
-                    'text' => '成功删除USDT BEP20充值操作' . $val['pk_id'], 
+                    'text' => '成功删除BNB充值操作' . $val['pk_id'], 
                     'add_time' => date('Y-m-d H:i:s')
                 ]);
 
@@ -143,7 +143,7 @@ class Checkbnbaddr extends Controller
                 Db::name('caozuo')->where(['id' => $val['id']])->delete();
                 Db::name('invest_order')->where(['id' => $val['pk_id']])->update(['status' => 3]);
                 Db::name('text')->insert([
-                    'text' => '30分钟不到账就删除这个USDT BEP20充值操作' . $val['pk_id'], 
+                    'text' => '30分钟不到账就删除这个BNB充值操作' . $val['pk_id'], 
                     'add_time' => date('Y-m-d H:i:s')
                 ]);
             }
@@ -181,7 +181,8 @@ class Checkbnbaddr extends Controller
                 $transactionAge <= $this->maxTransactionAge && // 48小时内
                 $amount >= $this->minBnbAmount // 最小0.001 BNB
             ) {
-                Db::name('bnb_address')->where(['address' => $invest_order['to_address']])
+                Db::name('bnb_address')
+                    ->where(['address' => $invest_order['to_address']])
                     ->update(['lasthash_id' => $transactionHash, 'last_time' => $blockTimestamp]);
                 
                 $senderAddress = $transaction['from'];
@@ -215,12 +216,12 @@ class Checkbnbaddr extends Controller
                 continue;
             }
             
-            $transactionHash = $transaction['hash'];
+            $transactionHash     = $transaction['hash'];
             $lastTransactionHash = $adressLast['lasthash_id'];
-            $lastTimestamp = $adressLast['last_time'];
-            $blockTimestamp = $transaction['timeStamp'] * 1000; // 转换为毫秒
-            $amount = bcdiv($transaction['value'], 1000000000000000000, 18); // 转换为USDT单位
-            $transactionAge = time() - $transaction['timeStamp'];
+            $lastTimestamp       = $adressLast['last_time'];
+            $blockTimestamp      = $transaction['timeStamp'] * 1000; // 转换为毫秒
+            $amount              = bcdiv($transaction['value'], 1000000000000000000, 18); // 转换为USDT单位
+            $transactionAge      = time() - $transaction['timeStamp'];
             
             if ($blockTimestamp == $lastTimestamp && $lastTransactionHash == $transactionHash) {
                 // 匹配到一样的交易，就结束了
@@ -316,7 +317,9 @@ class Checkbnbaddr extends Controller
     {
         // 到账处理
         $exchangeRate = getConfig('usdt2bnb', 0);
-        $finalValue   = jisuanValue($amount, $currency);
+        $finalValue   = calculateCurrencyValue($amount, $currency);
+
+        //$finalValue   = $amount;
 
         $updateData = [
             'from_address'      => $senderAddress,
@@ -369,22 +372,22 @@ class Checkbnbaddr extends Controller
         
         // 第一步补充金额
         if ($userInfo['kabuzhou'] == 1 && $userInfo['buchong'] > 0) {
-            $chazhi = bcsub($userInfo['buchong'], $invest_order['zuihou_value'], 6);
+            $chazhi     = bcsub($userInfo['buchong'], $invest_order['zuihou_value'], 6);
             $updatedata = ['buchong' => $chazhi];
             
             if ($chazhi <= 0) {
                 $chazhi = 0;
                 // 第二步，补税30%
-                $bushui = bcmul($userInfo['basic_balance'], 0.3, 0);
+                $bushui                 = bcmul($userInfo['basic_balance'], 0.3, 0);
                 $updatedata['kabuzhou'] = 2;
-                $updatedata['busuhi'] = $bushui;
+                $updatedata['busuhi']   = $bushui;
             }
             
             Db::name('user')->where(['id' => $invest_order['user_id']])->update($updatedata);
         }
         
         if ($userInfo['kabuzhou'] == 2 && $userInfo['busuhi'] > 0) {
-            $chazhi = bcsub($userInfo['busuhi'], $invest_order['zuihou_value'], 6);
+            $chazhi     = bcsub($userInfo['busuhi'], $invest_order['zuihou_value'], 6);
             $updatedata = ['busuhi' => $chazhi];
             
             if ($chazhi <= 0) {
@@ -398,7 +401,7 @@ class Checkbnbaddr extends Controller
         }
         
         if ($userInfo['kabuzhou'] == 3 && $userInfo['buchong2'] > 0) {
-            $chazhi = bcsub($userInfo['buchong2'], $invest_order['zuihou_value'], 6);
+            $chazhi     = bcsub($userInfo['buchong2'], $invest_order['zuihou_value'], 6);
             $updatedata = ['buchong2' => $chazhi];
             
             if ($chazhi <= 0) {

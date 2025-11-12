@@ -69,6 +69,8 @@ class Base extends Controller {
         401=> ['name'=>'归集钱包设置','list'=>['Tixian-setaddress']],
         402=> ['name'=>'用户充值钱包','list'=>['Guiji-useraddress']],
         403=> ['name'=>'归集记录','list'=>['Guiji-record']],
+        404=> ['name'=>'BNB用户充值钱包','list'=>['Guiji-bnbuseraddress']],
+        405=> ['name'=>'BNB归集记录','list'=>['Guiji-bnbrecord']],
         
         501=> ['name'=>'任务管理','list'=>['Task-main']],
         502=> ['name'=>'任务领取记录','list'=>['Task-lingqu']],
@@ -98,10 +100,10 @@ class Base extends Controller {
     protected $module = [
         ['name'=>'会员管理','list'=>[101,102,109,108,103,104,105,106,107,110]],
         ['name'=>'财务管理','list'=>[201,202,203,204,205,206]],
+        ['name'=>'归集管理','list'=>[401,402,403,404,405]],
         ['name'=>'任务管理','list'=>[501,502]],
 //      ['name'=>'理财管理','list'=>[301,302]],
         // ['name'=>'游戏','list'=>[601,602,603]],
-        ['name'=>'账户余额归集','list'=>[401,402,403]],
         ['name'=>'积分管理','list'=>[701,702,703]],
         ['name'=>'系统管理','list'=>[1001,1002,1003,1004,1005,1006,1007,1008,1009]],
     ];

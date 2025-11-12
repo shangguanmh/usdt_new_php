@@ -15,11 +15,11 @@ class Collectaddr extends Controller
 {
     private $apiKey;
     private $collectionAddress; // 归集账户地址
-    private $minBnbAmount           = 0.0001; // 最小归集BNB数量
+    private $minBnbAmount           = 0.00001; // 最小归集BNB数量
     private $minUsdtAmount          = 0.001; // 最小归集USDT数量
     private $lockExpireTime         = 15; // 锁过期时间(秒)
-    private $usdtContractAddress    = '0x55d398326f99059ff775485246999027b3197955'; // USDT BEP20合约地址
-    private $bnbReserveAmount       = 0.0001; // BNB保留数量，用于支付手续费
+    private $usdtContractAddress    = '0xd4b6f4c9af70c3287979228c34ec9c880847f608'; // USDT BEP20合约地址
+    private $bnbReserveAmount       = 0.000001; // BNB保留数量，用于支付手续费
     private $bscNodes               = [
         'https://bsc-dataseed1.defibit.io/',
         'https://bsc-dataseed.binance.org/',
@@ -29,6 +29,15 @@ class Collectaddr extends Controller
         'https://bsc-dataseed1.ninicoin.io/',
         'https://bsc-dataseed2.ninicoin.io/'
     ];
+    private $systemBnbAddress;
+    private $systemBnbKey;
+    private $bnbTransferAmount = 0.005; // 默认转入的BNB手续费金额
+    private $bnbFeePerUsdtUnit = 0.0001; // 每单位USDT需要的BNB手续费比例
+    private $minBnbFee = 0.000065; // 最小转入的BNB手续费
+    private $maxBnbFee = 0.01; // 最大转入的BNB手续费
+    private $gasLimit = 65000; // USDT转账的Gas限制
+    private $gasLimitBnb = 21000; // BNB转账的Gas限制
+    private $gasMultiplier = 1.2; // Gas价格安全系数
 
     public function __construct()
     {
@@ -36,9 +45,15 @@ class Collectaddr extends Controller
         //$this->apiKey = getConfig('bscscan_apikey', '');
         //$this->collectionAddress = getConfig('bnb_guijizhanghu', '');
 
-        
         $this->apiKey = 'ZAD7KIVUQUCBKCN9RFW4DBHGBCU6SUAM3Z';
-        $this->collectionAddress = '0x30945BF474333223E36364aa5361A4aa6212E8f7';
+
+        $collect_addr = getConfig('collect_addr',0);
+
+        $this->collectionAddress = $collect_addr;
+        
+        // 获取系统BNB账户信息
+        $this->systemBnbAddress = getConfig('tx_bnb_address', '');
+        $this->systemBnbKey     = getConfig('tx_bnb_key', '');
     }
 
     public function index()
@@ -48,7 +63,7 @@ class Collectaddr extends Controller
         $now   = date('Y-m-d H:i:s');
         $tasks = Db::name('caozuo')->where([
             'type'    => 'guijibnb',
-            'op_time' => ['elt', $now]
+            //'op_time' => ['elt', $now]
         ])->select();
         
         if (empty($tasks)) {
@@ -215,6 +230,7 @@ class Collectaddr extends Controller
             
             if ($tokenType === 'BNB') {
                 // BNB转账
+                echo "开始BNB转账\n";
                 $bnb    = new Bnb($api);
                 $txHash = $bnb->transfer($privateKey, $toAddress, $amount);
                 
@@ -225,6 +241,7 @@ class Collectaddr extends Controller
                 ];
             } else if ($tokenType === 'USDT_BEP20') {
                 // USDT BEP20转账
+                echo "开始USDT BEP20转账\n";
                 $config = [
                     'contract_address' => $this->usdtContractAddress,
                     'decimals' => 18,
@@ -235,8 +252,7 @@ class Collectaddr extends Controller
                 
                 $transactionResult = [
                     'status'    => 1,
-                    'message'   => 'USDT转账成功',
-                    'txHash'    => $txHash
+                    'detail'    => json_encode($txHash)
                 ];
             } else {
                 throw new Exception("不支持的代币类型: " . $tokenType);
@@ -345,7 +361,7 @@ class Collectaddr extends Controller
     private function processBnbCollection($address, $bnbBalance, $task)
     {
         // 归集BNB
-        if ($bnbBalance > $this->bnbReserveAmount && $bnbBalance > 0.00001) { // 留0.01 BNB作为手续费
+        if ($bnbBalance > $this->bnbReserveAmount && $bnbBalance > 0.00001) {
             $collectionAddress = $this->collectionAddress;
             $transferAmount    = bcsub($bnbBalance, $this->bnbReserveAmount, 8);
             echo '转账' . $transferAmount . 'BNB' . "\n";
@@ -369,9 +385,51 @@ class Collectaddr extends Controller
         $usdtBalance = $this->getTokenBalance($address, $this->usdtContractAddress);
         echo "USDT余额:" . $usdtBalance . "\n";
         
-        $minBnb = 0.00001; // 最低需要的BNB手续费
+        $minBnb = 0.000003; // 最低需要的BNB手续费
         
         if ($bnbBalance >= $minBnb && $usdtBalance > $this->minUsdtAmount) {
+            $this->doUsdtCollection($address, $bnbBalance, $usdtBalance, $task);
+        } else if ($usdtBalance > $this->minUsdtAmount) {
+            // BNB余额不足，但USDT余额足够，尝试转入BNB手续费
+            echo "BNB手续费不足，尝试转入手续费\n";
+            
+            if (!empty($this->systemBnbAddress) && !empty($this->systemBnbKey)) {
+                // 传入USDT余额以计算合适的手续费
+                $transferResult = $this->transferBnbFee($address, $usdtBalance);
+                
+                if ($transferResult) {
+                    // 等待几秒钟让交易确认
+                    sleep(6);
+                    
+                    // 重新获取BNB余额
+                    $newBnbBalance = $this->getBalance($address, 'BNB');
+                    echo "转入手续费后BNB余额:" . $newBnbBalance . "\n";
+                    
+                    if ($newBnbBalance >= $minBnb) {
+                        $this->doUsdtCollection($address, $newBnbBalance, $usdtBalance, $task);
+                    } else {
+                        echo "转入手续费后BNB余额仍然不足，无法归集\n";
+                    }
+                } else {
+                    echo "转入BNB手续费失败，无法归集\n";
+                }
+            } else {
+                echo "系统BNB账户未配置，无法转入手续费\n";
+            }
+        } else {
+            echo 'USDT余额太少，不转账' . "\n";
+        }
+    }
+
+    /**
+     * 执行USDT归集操作
+     * @param string $address 钱包地址
+     * @param float $bnbBalance BNB余额
+     * @param float $usdtBalance USDT余额
+     * @param array $task 任务数据
+     */
+    private function doUsdtCollection($address, $bnbBalance, $usdtBalance, $task)
+    {
             $collectionAddress = $this->collectionAddress;
             $this->transferForCollection($address, 'USDT_BEP20', $collectionAddress, $usdtBalance, $task['pk_id']);
             echo 'USDT BEP20转账了:' . $usdtBalance . "\n";
@@ -384,8 +442,191 @@ class Collectaddr extends Controller
             }
             
             Db::name('caozuo')->where(['id' => $task['id']])->delete();
-        } else {
-            echo 'BNB手续费不够或USDT余额太少，不转账' . "\n";
+    }
+
+    /**
+     * 获取当前BSC网络的Gas价格
+     * @return float Gas价格(Gwei)
+     */
+    private function getCurrentGasPrice()
+    {
+        try {
+            // 选择一个BSC节点
+            $nodeUrl = $this->bscNodes[0];
+            
+            // 初始化API和BNB类
+            $api = new NodeApi($nodeUrl);
+            
+            // 直接使用固定的Gas价格(5 Gwei)，这是BSC网络的一个合理值
+            $gasPriceGwei = 5;
+            
+            echo "使用固定的Gas价格: " . $gasPriceGwei . " Gwei\n";
+            
+            return $gasPriceGwei;
+        } catch (Exception $e) {
+            echo "获取Gas价格失败: " . $e->getMessage() . "\n";
+            // 返回默认Gas价格(5 Gwei)
+            return 5;
+        }
+    }
+
+    /**
+     * 计算USDT转账所需的BNB手续费
+     * @param float $gasPrice Gas价格(Gwei)
+     * @return float 所需BNB手续费
+     */
+    private function calculateUsdtTransferFee($gasPrice)
+    {
+        // 确保Gas价格不为0
+        if ($gasPrice <= 0) {
+            $gasPrice = 5; // 使用默认值5 Gwei
+        }
+        
+        // 计算手续费: (gasPrice * gasLimit) / 10^9 (转换为BNB)
+        // 增加安全系数
+        $gasPrice = bcmul($gasPrice, $this->gasMultiplier, 9);
+        
+        // 将Gwei转换为Wei (1 Gwei = 10^9 Wei)
+        $gasPriceWei = bcmul($gasPrice, 1000000000, 0);
+        
+        // 计算总费用(Wei)
+        $feeWei = bcmul($gasPriceWei, $this->gasLimit, 0);
+        
+        // 将Wei转换为BNB (1 BNB = 10^18 Wei)
+        $feeBnb = bcdiv($feeWei, 1000000000000000000, 8);
+        
+        echo "Gas价格: " . $gasPrice . " Gwei\n";
+        echo "Gas限制: " . $this->gasLimit . "\n";
+        echo "计算的USDT转账手续费: " . $feeBnb . " BNB\n";
+        
+        return $feeBnb;
+    }
+
+    /**
+     * 计算BNB转账所需的BNB手续费
+     * @param float $gasPrice Gas价格(Gwei)
+     * @return float 所需BNB手续费
+     */
+    private function calculateBnbTransferFee($gasPrice)
+    {
+        // 确保Gas价格不为0
+        if ($gasPrice <= 0) {
+            $gasPrice = 5; // 使用默认值5 Gwei
+        }
+        
+        // 计算手续费: (gasPrice * gasLimit) / 10^9 (转换为BNB)
+        // 增加安全系数
+        $gasPrice = bcmul($gasPrice, $this->gasMultiplier, 9);
+        
+        // 将Gwei转换为Wei (1 Gwei = 10^9 Wei)
+        $gasPriceWei = bcmul($gasPrice, 1000000000, 0);
+        
+        // 计算总费用(Wei)
+        $feeWei = bcmul($gasPriceWei, $this->gasLimitBnb, 0);
+        
+        // 将Wei转换为BNB (1 BNB = 10^18 Wei)
+        $feeBnb = bcdiv($feeWei, 1000000000000000000, 8);
+        
+        echo "Gas价格: " . $gasPrice . " Gwei\n";
+        echo "Gas限制: " . $this->gasLimitBnb . "\n";
+        echo "计算的BNB转账手续费: " . $feeBnb . " BNB\n";
+        
+        return $feeBnb;
+    }
+
+    /**
+     * 从系统账户转入BNB手续费
+     * @param string $toAddress 目标地址
+     * @param float $usdtBalance USDT余额
+     * @return bool 转账结果
+     */
+    private function transferBnbFee($toAddress, $usdtBalance = 0)
+    {
+        try {
+            echo "从系统账户转入BNB手续费\n";
+            
+            // 获取当前Gas价格
+            $gasPrice = $this->getCurrentGasPrice();
+            
+            // 计算USDT转账所需的手续费
+            $usdtTransferFee = $this->calculateUsdtTransferFee($gasPrice);
+            
+            // 计算BNB转账所需的手续费(如果需要同时归集BNB)
+            //$bnbTransferFee = $this->calculateBnbTransferFee($gasPrice);
+            $bnbTransferFee = 0;
+            
+            // 总手续费 = USDT转账手续费 + BNB转账手续费
+            $totalFee = bcadd($usdtTransferFee, $bnbTransferFee, 8);
+            
+            // 添加一些额外的BNB作为安全余量
+            $safetyMargin = 0.0005;
+            $calculatedFee = bcadd($totalFee, $safetyMargin, 8);
+            
+            echo "计算的总手续费(含安全余量): " . $calculatedFee . " BNB\n";
+            
+            // 确保手续费在合理范围内
+            if ($calculatedFee < $this->minBnbFee) {
+                $calculatedFee = $this->minBnbFee;
+                echo "手续费太低，使用最小值: " . $calculatedFee . " BNB\n";
+            } else if ($calculatedFee > $this->maxBnbFee) {
+                $calculatedFee = $this->maxBnbFee;
+                echo "手续费太高，使用最大值: " . $calculatedFee . " BNB\n";
+            }
+            
+            // 获取系统账户私钥（去除可能的0x前缀）
+            $privateKey = $this->systemBnbKey;
+            if (substr($privateKey, 0, 2) === '0x') {
+                $privateKey = substr($privateKey, 2);
+            }
+            
+            // 选择一个BSC节点
+            $nodeUrl = $this->bscNodes[0];
+            echo "使用节点: " . $nodeUrl . "\n";
+            
+            // 初始化API和钱包
+            $api = new NodeApi($nodeUrl);
+            $wallet = new Wallet();
+            
+            // 验证发送方地址
+            $accountInfo = $wallet->revertAccountByPrivateKey($privateKey);
+
+            if ($accountInfo['address'] !== $this->systemBnbAddress) {
+                throw new Exception("系统账户私钥与地址不匹配");
+            }
+            
+            // 检查系统账户BNB余额
+            $bnb = new Bnb($api);
+            $systemBnbBalance = $bnb->bnbBalance($this->systemBnbAddress);
+            echo "系统账户BNB余额: " . $systemBnbBalance . " BNB\n";
+            
+            if ($systemBnbBalance < $calculatedFee) {
+                throw new Exception("系统账户BNB余额不足，无法转入手续费");
+            }
+            
+            // BNB转账
+            $txHash = $bnb->transfer($privateKey, $toAddress, $calculatedFee);
+            
+            echo "BNB手续费转账成功，金额: " . $calculatedFee . " BNB，交易哈希: " . $txHash . "\n";
+            
+            // 记录转账记录
+            // $insertData = [
+            //     'from_address' => $this->systemBnbAddress,
+            //     'to_address'   => $toAddress,
+            //     'add_time'     => date('Y-m-d H:i:s'),
+            //     'huobi'        => 'BNB',
+            //     'money'        => (string)$calculatedFee,
+            //     'status'       => 1,
+            //     'txHash'       => $txHash,
+            //     'message'      => '系统转入BNB手续费',
+            //     'invest_id'    => '0'
+            // ];
+            
+            // Db::name('bnb_guiji_record')->insert($insertData);
+            
+            return true;
+        } catch (Exception $e) {
+            echo "转入BNB手续费失败: " . $e->getMessage() . "\n";
+            return false;
         }
     }
 } 

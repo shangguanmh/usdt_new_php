@@ -14,7 +14,7 @@ class Guiji extends Controller
 //	private $model = 'zhengshi';
 	private $model = 'ceshi';
 	private $key = '7479176d-30ba-4e29-8ed3-e8d9a83ac589';
-	private $guijizhanghu = 'TRdrtu3xwZhp135VJmPrfPPD4n5RqEMd5v';  //TKBmX7Wq9MEAbihXHrbQDVCP4L2x51PEXh
+	private $guijizhanghu = 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM';  //TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM
 	private $siteKey = 'trx';
 	
 	function http_get($url)
@@ -55,14 +55,14 @@ class Guiji extends Controller
 	function guiji(){
 		$getdata = request() -> get();
         
-        $guijizhanghu = 'TAZQv4FEHfz6SwvtP6A7gfGm7w1UCmJ2xs';  //TKBmX7Wq9MEAbihXHrbQDVCP4L2x51PEXh
+        $guijizhanghu = 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM';  //TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM
         
         $uri = 'https://api.trongrid.io';
         $api = new \Tron\Api(new Client(['base_uri' => 'https://api.trongrid.io','headers'=>['TRON-PRO-API-KEY'=> '7479176d-30ba-4e29-8ed3-e8d9a83ac589']]));
          $config = [
-	          'contract_address' => 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',// USDT TRC20
+	          'contract_address' => 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM',// USDT TRC20
 	        'decimals' => 6,
-	           // 'address' => 'TPipV2NhmTKsiPDRc78YUWt4n9FYxVBqbT'
+	           // 'address' => 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM'
 	       ];
         
         $trc20Wallet = new \Tron\TRC20($api, $config);
@@ -229,7 +229,7 @@ class Guiji extends Controller
         // $api = new \Tron\Api(new Client(['base_uri' => $uri,'headers'=>['TRON-PRO-API-KEY'=> $this->tron_key]]));
         //'cb4e98c7-223e-4e57-bd8b-e6feefcb7010'
          $config = [
-	          'contract_address' => 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',// USDT TRC20
+	          'contract_address' => 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM',// USDT TRC20
 	          'decimals' => 6,
 	       ];
         
@@ -249,7 +249,7 @@ class Guiji extends Controller
     function getEnergy($add)
     {
         
-        $add = 'TARsrzvAp1W6b9QN7MHyekksmpJ7YTz4Pg';
+        $add = 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM';
         //判断格式是否正确
         if(strlen($add) !=34)
         {
@@ -330,14 +330,14 @@ class Guiji extends Controller
 		//真实网
 		$api = new \Tron\Api(new Client(['base_uri' => 'https://api.trongrid.io','headers'=>['TRON-PRO-API-KEY'=> '7479176d-30ba-4e29-8ed3-e8d9a83ac589']]));
 	    $config = [
-	        'contract_address' => 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',// USDT TRC20
+	        'contract_address' => 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM',// USDT TRC20
 	        'decimals' => 6,
 	    ];
 	    //测试网
 	    if(MOSHI =='ceshi'){
 	    	$api = new \Tron\Api(new Client(['base_uri' => 'https://api.shasta.trongrid.io']));
 	    	$config = [
-	    	    'contract_address' => 'TG3XXyExBkPp9nzdajDZsozEu4BkaSJozs',// USDT TRC20
+	    	    'contract_address' => 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM',// USDT TRC20
 	    	    'decimals' => 6,
 	    	];
 	    }
@@ -366,27 +366,27 @@ class Guiji extends Controller
 	//真实网
 	$api = new \Tron\Api(new Client(['base_uri' => 'https://api.trongrid.io','headers'=>['TRON-PRO-API-KEY'=> '744c6548-c60e-4652-9220-a22534731600']]));
     $config = [
-        'contract_address' => 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',// USDT TRC20
+        'contract_address' => 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM',// USDT TRC20
         'decimals' => 6,
     ];
     //测试网
     if(MOSHI =='ceshi'){
     	$api = new \Tron\Api(new Client(['base_uri' => 'https://api.shasta.trongrid.io']));
     	$config = [
-    	    'contract_address' => 'TG3XXyExBkPp9nzdajDZsozEu4BkaSJozs',// USDT TRC20
+    	    'contract_address' => 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM',// USDT TRC20
     	    'decimals' => 6,
     	];
     }
 	if($huobi == 'TRX'){
 		$dakuan = getConfig('dakuan_trx',0);
 		$dakuan = json_decode($dakuan,true);
-		$dakuan['address'] = 'TRdrtu3xwZhp135VJmPrfPPD4n5RqEMd5v';
+		$dakuan['address'] = 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM';
 		$dakuan['key'] = 'f8b5ae023dde433fec7d3ff4e1c6dac3017e99abdb0037bb7df60d815a0cf33a';
         $wallet = new \Tron\TRX($api, $config);
 	}elseif($huobi == 'USDT'){
 		$dakuan = getConfig('dakuan_usdt',0);
 		$dakuan = json_decode($dakuan,true);
-		$dakuan['address'] = 'TRdrtu3xwZhp135VJmPrfPPD4n5RqEMd5v';
+		$dakuan['address'] = 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM';
 		$dakuan['key'] = 'f8b5ae023dde433fec7d3ff4e1c6dac3017e99abdb0037bb7df60d815a0cf33a';
         $wallet = new \Tron\TRC20($api, $config);
 	}

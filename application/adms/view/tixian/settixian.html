@@ -30,7 +30,7 @@
   
     <div class="layui-form-item">
     <div class="layui-inline">
-      <label class="layui-form-label">每日可免费提现次数</label>
+      <label class="layui-form-label">每日可免费提现次数(TRX)</label>
       <div class="layui-input-inline" style="width: 500px;">
         <input name="tixian_day_mianfei"  lay-verify="required" class="layui-input"   value="{$tixian_day_mianfei}">
       </div>
@@ -38,7 +38,7 @@
   </div>
   <div class="layui-form-item">
     <div class="layui-inline">
-      <label class="layui-form-label">每日可提现次数</label>
+      <label class="layui-form-label">每日可提现次数(TRX)</label>
       <div class="layui-input-inline" style="width: 500px;">
         <input name="tixian_day_num"  lay-verify="required" class="layui-input"   value="{$tixian_day_num}">
       </div>
@@ -46,7 +46,7 @@
   </div>
    <div class="layui-form-item">
     <div class="layui-inline">
-      <label class="layui-form-label">最低提现金额（{$ZHB}）</label>
+      <label class="layui-form-label">最低提现金额（{$ZHB}）(TRX)</label>
       <div class="layui-input-inline" style="width: 500px;">
         <input name="zuiditikuan"  lay-verify="required" class="layui-input"   value="{$zuiditikuan}">
       </div>
@@ -60,6 +60,41 @@
       </div>
     </div>
   </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">每日可免费提现次数(BNB)</label>
+            <div class="layui-input-inline" style="width: 500px;">
+                <input name="tx_free_bnb"  lay-verify="required" class="layui-input"   value="{$tx_free_bnb}">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">每日可提现次数(BNB)</label>
+            <div class="layui-input-inline" style="width: 500px;">
+                <input name="tx_day_bnb"  lay-verify="required" class="layui-input"   value="{$tx_day_bnb}">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">最低提现金额（{$ZHB}）(BNB)</label>
+            <div class="layui-input-inline" style="width: 500px;">
+                <input name="tx_less_bnb"  lay-verify="required" class="layui-input"   value="{$tx_less_bnb}">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">提现费率(%)(BNB)</label>
+            <div class="layui-input-inline" style="width: 500px;">
+                <input name="tx_bnb_rate"  lay-verify="required" class="layui-input"   value="{$tx_bnb_rate}">
+            </div>
+        </div>
+    </div>
+
     <div class="layui-form-item">
 	  <label class="layui-form-label">升级是否重置任务</label>
 		 <div class="layui-input-inline">
@@ -115,6 +150,39 @@
       </div>
     </div>
   </div>
+
+  <!-- 添加BNB提现账号设置 -->
+  <div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">BNB提现帐号</label>
+      <div class="layui-input-inline" style="width: 500px;">
+        <input name="bnb_address"  lay-verify="required" class="layui-input"   value="{$bnb_address}">
+      </div>
+    </div>
+     <div class="layui-inline">
+      <label class="layui-form-label">BNB提现密钥</label>
+      <div class="layui-input-inline" style="width: 500px;">
+        <input name="bnb_key"  lay-verify="required" class="layui-input"   value="{$bnb_key}">
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加BEP20 USDT提现账号设置 -->
+  <div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">BEP20 USDT提现帐号</label>
+      <div class="layui-input-inline" style="width: 500px;">
+        <input name="bep_address"  lay-verify="required" class="layui-input"   value="{$bep_address}">
+      </div>
+    </div>
+     <div class="layui-inline">
+      <label class="layui-form-label">BEP20 USDT提现密钥</label>
+      <div class="layui-input-inline" style="width: 500px;">
+        <input name="bep_key"  lay-verify="required" class="layui-input"   value="{$bep_key}">
+      </div>
+    </div>
+  </div>
+
    <div class="layui-form-item">
     <div class="layui-inline">
       <label class="layui-form-label" style="">验证安全密码</label>

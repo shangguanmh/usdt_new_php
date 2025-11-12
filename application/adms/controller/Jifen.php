@@ -226,7 +226,7 @@ class Jifen extends Base {
         $api = new \Tron\Api(new Client(['base_uri' => $uri]));
         if($huobi =='TRX'){
 	        $config = [
-	            'contract_address' => 'TG3XXyExBkPp9nzdajDZsozEu4BkaSJozs',// USDT TRC20
+	            'contract_address' => 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM',// USDT TRC20
 	            'decimals' => 6,
 	        ];
 	        $trc20Wallet = new \Tron\TRC20($api, $config);

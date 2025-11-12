@@ -39,7 +39,7 @@ class Testbnb extends Controller
             $wallet = new Wallet(); // 创建钱包实例
 
             $config = [
-                'contract_address' => '0x55d398326f99059fF775485246999027B3197955',// USDT BEP20
+                'contract_address' => '0xd4b6f4c9af70c3287979228c34ec9c880847f608',// USDT BEP20
                 'decimals' => 18,
             ];
 
@@ -47,7 +47,7 @@ class Testbnb extends Controller
 
             // 私钥（不带0x前缀）
             $privateKey = 'e9c275426f870d3ebf0753192311a80d312cff0083642261180572f83d937771';
-            $toAddress = '0x30945BF474333223E36364aa5361A4aa6212E8f7';
+            $toAddress = '0xd4b6f4c9af70c3287979228c34ec9c880847f608';
 
             // 使用钱包类获取地址
             $accountInfo = $wallet->revertAccountByPrivateKey($privateKey);
@@ -80,7 +80,7 @@ class Testbnb extends Controller
                 
                 // 添加调试信息
                 echo "转账参数: 从地址 {$fromAddress} 发送 {$amount} 到地址 {$toAddress}\n";
-                
+                //exit;
                 $res2 = $bep20->transfer($privateKey, $toAddress, $amount, $gasPrice);
                 var_dump($res2);
                 
@@ -132,34 +132,5 @@ class Testbnb extends Controller
             echo "错误行号: " . $e->getLine() . "\n";
             echo "堆栈跟踪: " . $e->getTraceAsString() . "\n";
         }
-    }
-
-    public function getBSCTransactionHistory($address) 
-    {
-        $apiKey = 'ZAD7KIVUQUCBKCN9RFW4DBHGBCU6SUAM3Z'; // 需要替换为您的 BscScan API 密钥
-        // 1. 获取普通BNB转账交易
-        $normalTxUrl = "https://api.bscscan.com/api?module=account&action=txlist&address={$address}&startblock=0&endblock=99999999&sort=desc&apikey={$apiKey}";
-        
-        // 2. 获取内部交易
-        $internalTxUrl = "https://api.bscscan.com/api?module=account&action=txlistinternal&address={$address}&startblock=0&endblock=99999999&sort=desc&apikey={$apiKey}";
-        
-        // 3. 获取BEP20代币转账
-        $tokenTxUrl = "https://api.bscscan.com/api?module=account&action=tokentx&address={$address}&startblock=0&endblock=99999999&sort=desc&apikey={$apiKey}";
-        
-        // 4. 获取BEP721(NFT)转账
-        $nftTxUrl = "https://api.bscscan.com/api?module=account&action=tokennfttx&address={$address}&startblock=0&endblock=99999999&sort=desc&apikey={$apiKey}";
-        
-        // 执行请求并返回结果
-        $normalTx = json_decode(file_get_contents($normalTxUrl), true);
-        $internalTx = json_decode(file_get_contents($internalTxUrl), true);
-        $tokenTx = json_decode(file_get_contents($tokenTxUrl), true);
-        $nftTx = json_decode(file_get_contents($nftTxUrl), true);
-        
-        return [
-            'normal' => $normalTx['result'] ?? [],
-            'internal' => $internalTx['result'] ?? [],
-            'token' => $tokenTx['result'] ?? [],
-            'nft' => $nftTx['result'] ?? []
-        ];
     }
 } 

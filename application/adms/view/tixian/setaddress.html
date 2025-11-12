@@ -9,15 +9,15 @@
   <link rel="stylesheet" href="__PUBLIC__/static/Cs/frame/layui/css/layui.css"  media="all">
   <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
   <style>
-  	.layui-form-label{
-  		width: 100px;
-  	}
+    .layui-form-label{
+      width: 100px;
+    }
   </style>
 </head>
-<body>            
+<body>
 <form class="layui-form" style="margin-top: 10px;">
-  
-	<div class="layui-form-item">
+
+  <div class="layui-form-item">
     <div class="layui-inline">
       <label class="layui-form-label">归集账户设置</label>
       <div class="layui-input-inline" style="width: 500px;">
@@ -27,7 +27,7 @@
   </div>
 
 
-	<div class="layui-form-item">
+  <div class="layui-form-item">
     <div class="layui-inline">
       <label class="layui-form-label">归集USDT-BEP20账户设置</label>
       <div class="layui-input-inline" style="width: 500px;">
@@ -63,24 +63,24 @@
 <script src="__PUBLIC__/static/Cs/frame/layui/layui.js" charset="utf-8"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
-layui.use(['form','layer'], function(){
-  var form = layui.form(),layer = layui.layer,$ = layui.jquery;
-  //监听提交
-  form.on('submit(demo1)', function(data){
-	$("#tijiao").hide();
-    $.post("{:url('Tixian/setaddress')}",data.field,function(res){
+  layui.use(['form','layer'], function(){
+    var form = layui.form(),layer = layui.layer,$ = layui.jquery;
+    //监听提交
+    form.on('submit(demo1)', function(data){
+      $("#tijiao").hide();
+      $.post("{:url('Tixian/setaddress')}",data.field,function(res){
         if(res.code ==1){
-            layer.msg(res.msg,{time:1800,icon: 1},function(){
-                window.location.reload();
-            });
+          layer.msg(res.msg,{time:1800,icon: 1},function(){
+            window.location.reload();
+          });
         }else{
-  				$("#tijiao").show();
-            layer.msg(res.msg,{time:1800,icon: 5});
+          $("#tijiao").show();
+          layer.msg(res.msg,{time:1800,icon: 5});
         }
-    },'json');
-    return false;
+      },'json');
+      return false;
+    });
   });
-});
 </script>
 
 </body>

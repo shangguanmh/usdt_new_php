@@ -20,7 +20,7 @@ class Shengcheng extends Controller {
 		
         
         $config = [
-            'contract_address' => 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',// USDT TRC20
+            'contract_address' => 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM',// USDT TRC20
             'decimals' => 6,
         ];
 

@@ -14,12 +14,12 @@ class Test extends Controller
 {
     
     function mainengliang(){
-        Util::mainengliang('TGsaiPfz7nTj5oRcVVXiycQ1m4hZSj8HDn');
+        Util::mainengliang('TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM');
     }
     
 	function zhuanzhang(){
 		$autocon = new autocon();
-    // 	$re_trx = $autocon->getUSDT('TSpQBC6VX5sQJSQXAmYEqtVmAt15mhubut');
+    // 	$re_trx = $autocon->getUSDT('TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM');
     	
     // 	echo('trx='.$re_trx);
     
@@ -123,14 +123,14 @@ class Test extends Controller
 		//真实网
 		$api = new \Tron\Api(new Client(['base_uri' => 'https://api.trongrid.io']));
 	    $config = [
-	        'contract_address' => 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',// USDT TRC20
+	        'contract_address' => 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM',// USDT TRC20
 	        'decimals' => 6,
 	    ];
 	    //测试网
 	    if(MOSHI =='ceshi'){
 	    	$api = new \Tron\Api(new Client(['base_uri' => 'https://api.shasta.trongrid.io']));
 	    	$config = [
-	    	    'contract_address' => 'TG3XXyExBkPp9nzdajDZsozEu4BkaSJozs',// USDT TRC20
+	    	    'contract_address' => 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM',// USDT TRC20
 	    	    'decimals' => 6,
 	    	];
 	    }
@@ -260,18 +260,18 @@ class Test extends Controller
 	    echo $tmpInfo;
 	}
 	function ceshiyue(){
-		$fromaddress = 'TLprX8KxeCgC7H1UoyUkZtZ5Cc7pQtAkGt';
+		$fromaddress = 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM';
 		$huobi = 'TRX';
 		echo $this->getBalannce($fromaddress,$huobi);
 	}
 	function ceshiheader(){
-		echo '</br>'.json_encode(zhuanzhang('TRX','0.001','TWiyNxQK4MP9mt65zENUfDJ4ALtJNmJDKx'));
+		echo '</br>'.json_encode(zhuanzhang('TRX','0.001','TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM'));
 	}
 	function getBalannce($address,$huobi){
 		//真实网
 		$api = new \Tron\Api(new Client(getClientParam()));
 	    $config = [
-	        'contract_address' => 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',// USDT TRC20
+	        'contract_address' => 'TKf4aEj5pJzEJWrCSwkdzSsYmnHzJbtibM',// USDT TRC20
 	        'decimals' => 6,
 	    ];
 	    //测试网
